@@ -36,3 +36,10 @@ Doador | Receptor
 4. Quantitativo de disponibilidade | 4. Pesquisa por geolocalização ou categoria
 5. Acompanhamento das doações | 5. Acerto com a parte doadora
 6. Combinam a retirada | 6. Combinam a retirada
+
+
+> Notificar ou buscar, necessidades na hora do cadastro de disponibilidade
+
+> Verificar distribuição 
+- Ordem de chegada
+- Automatica
