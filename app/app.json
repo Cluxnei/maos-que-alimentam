@@ -1,31 +1,17 @@
 {
+  "name": "mqa",
+  "displayName": "mqa",
   "expo": {
-    "name": "app",
-    "slug": "app",
-    "privacy": "public",
+    "name": "mqa",
+    "slug": "expo-template-bare",
+    "privacy": "unlisted",
     "sdkVersion": "36.0.0",
+    "version": "1.0.0",
+    "entryPoint": "node_modules/expo/AppEntry.js",
     "platforms": [
       "ios",
       "android",
       "web"
-    ],
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    }
+    ]
   }
 }
