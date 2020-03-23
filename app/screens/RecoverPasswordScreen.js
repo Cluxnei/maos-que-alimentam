@@ -11,7 +11,7 @@ export default () => {
         setIsPerformingAnyAction(true);
     };
     //#endregion
-    useEffect(init);
+    useEffect(init, []);
     //#region render
     if (isPerformingAnyAction) {
         return (<Loading />);
