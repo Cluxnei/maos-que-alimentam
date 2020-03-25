@@ -4,6 +4,9 @@ import * as S from '../styles/Login';
 import {getData} from "../storage";
 import {TokenKey, UserKey} from "../storage/Keys";
 import {validUserToken} from "../constants/Validate";
+import watermark from '../assets/watermark.png';
+import logo from '../assets/logo.png';
+import background from '../assets/background.png';
 
 export default ({navigation: navigate}) => {
     //#region states
@@ -28,17 +31,15 @@ export default ({navigation: navigate}) => {
     }
     return (
         <S.Container>
-            <S.Background>
+            <S.Background source={background}>
                 <S.scroll>
-                    <S.Header>
-                        <S.Watermark source={watermark} resizeMode="contain" />
-                    </S.Header>
+                    <S.Header resizeMode="stretch" source={watermark}/>
                     <S.body>
-                        <S.Logo source={logo} resizeMode="contain" />
+                        <S.Logo source={logo}/>
                         <S.DataContainer>
                             <S.InputContainer>
                                 <S.InputCircle>
-                                    <S.InputIcon source={inputIcon} resizeMode="contain" />
+                                    <S.InputIcon name="user"/>
                                 </S.InputCircle>
                                 <S.InputField>
                                     <S.InputText>Input</S.InputText>
@@ -46,27 +47,27 @@ export default ({navigation: navigate}) => {
                             </S.InputContainer>
                             <S.InputContainer>
                                 <S.InputCircle>
-                                    <S.InputIcon source={inputIcon} resizeMode="contain" />
+                                    <S.InputIcon name="lock"/>
                                 </S.InputCircle>
                                 <S.InputField>
                                     <S.InputText>Input</S.InputText>
                                 </S.InputField>
                             </S.InputContainer>
-                            <S.InputContainer>
+                            <S.InputContainer submit={true}>
                                 <S.SubmitButton>
                                     <S.SubmitButtonText>LOGIN</S.SubmitButtonText>
                                 </S.SubmitButton>
                             </S.InputContainer>
                         </S.DataContainer>
                         <S.LinksContainer>
-                            <S.SingupContainer>
+                            <S.SingUpContainer>
                                 <S.QuestionText>Não tem uma conta?</S.QuestionText>
-                                <S.SingupButton>
-                                    <S.SingupButtonText>
+                                <S.SingUpButton>
+                                    <S.SingUpButtonText>
                                         Cadastre-se
-                                    </S.SingupButtonText>
-                                </S.SingupButton>
-                            </S.SingupContainer>
+                                    </S.SingUpButtonText>
+                                </S.SingUpButton>
+                            </S.SingUpContainer>
                             <S.ForgotPasswordButton>
                                 <S.ForgotPasswordButtonText>
                                     Esqueceu sua senha?
