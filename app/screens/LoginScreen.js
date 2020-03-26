@@ -8,6 +8,7 @@ import {validUserToken} from "../constants/Validate";
 import watermark from '../assets/watermark.png';
 import logo from '../assets/logo.png';
 import background from '../assets/background.png';
+import {delay} from "../constants/Utils";
 
 export default ({navigation: navigate}) => {
     //#region states
@@ -31,8 +32,12 @@ export default ({navigation: navigate}) => {
             duration: 500,
         }).start();
     };
-    const resetAnimation = () => {
-        widthAnimation.setValue(20);
+    const resetAnimation = async () => {
+        Animated.timing(widthAnimation, {
+            toValue: 20,
+            duration: 400,
+        }).start();
+        await delay(400);
     };
     //#endregion
     //#region methods
@@ -41,9 +46,8 @@ export default ({navigation: navigate}) => {
         startAnimation();
         // Simulate request
         setTimeout(() => {
-            resetAnimation();
-            setIsPerformingAnyAction(false);
-        }, 2000);
+            resetAnimation().then(() => setIsPerformingAnyAction(false));
+        }, 3000);
     };
     const loginUser = async () => {
         const [token, user] = [await getData(TokenKey), await getData(UserKey)];
@@ -83,15 +87,16 @@ export default ({navigation: navigate}) => {
                                     placeholder={isPerformingAnyAction ? '' : 'E-mail'}
                                     returnKeyType="next" editable={!isPerformingAnyAction}
                                     textContentType="emailAddress" onSubmitEditing={handleEmailSubmitEditing}
+                                    style={{color: isPerformingAnyAction ? 'transparent' : 'white'}}
                                 />
                             </S.InputContainer>
-                            <S.InputContainer style={{flexDirection: isPerformingAnyAction ? 'row-reverse' : 'row'}}>
+                            <S.InputContainer>
                                 <S.InputCircle style={
                                     {
                                         width: isPerformingAnyAction ? widthAnimation.interpolate({
                                             inputRange: [20, 100],
                                             outputRange: ['20%', '100%'],
-                                        }) : 50
+                                        }) : 50,
                                     }
                                 }>
                                     <S.InputIcon name="lock"/>
@@ -103,6 +108,7 @@ export default ({navigation: navigate}) => {
                                     onSubmitEditing={attemptCredentials} returnKeyType="done"
                                     secureTextEntry selectTextOnFocus textContentType="password"
                                     ref={setPasswordField} editable={!isPerformingAnyAction}
+                                    style={{color: isPerformingAnyAction ? 'transparent' : 'white'}}
                                 />
                             </S.InputContainer>
                             <S.InputContainer submit>
