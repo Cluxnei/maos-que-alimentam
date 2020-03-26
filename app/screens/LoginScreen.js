@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {Animated} from 'react-native';
 import Loading from '../components/Loading';
 import * as S from '../styles/Login';
 import {getData} from "../storage";
@@ -11,8 +12,39 @@ import background from '../assets/background.png';
 export default ({navigation: navigate}) => {
     //#region states
     const [isPerformingAnyAction, setIsPerformingAnyAction] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [passwordField, setPasswordField] = useState(undefined);
+    const [widthAnimation] = useState(new Animated.Value(20));
+    //#endregion
+    //#region handlers
+    const handleEmailSubmitEditing = () => {
+        if (passwordField) {
+            passwordField.focus();
+        }
+    };
+    //#endregion
+    //#region animation methods
+    const startAnimation = () => {
+        Animated.timing(widthAnimation, {
+            toValue: 100,
+            duration: 500,
+        }).start();
+    };
+    const resetAnimation = () => {
+        widthAnimation.setValue(20);
+    };
     //#endregion
     //#region methods
+    const attemptCredentials = () => {
+        setIsPerformingAnyAction(true);
+        startAnimation();
+        // Simulate request
+        setTimeout(() => {
+            resetAnimation();
+            setIsPerformingAnyAction(false);
+        }, 2000);
+    };
     const loginUser = async () => {
         const [token, user] = [await getData(TokenKey), await getData(UserKey)];
         if (validUserToken(user, token)) {
@@ -26,9 +58,6 @@ export default ({navigation: navigate}) => {
     //#endregion
     useEffect(init, []);
     //#region render
-    if (isPerformingAnyAction) {
-        return (<Loading/>);
-    }
     return (
         <S.Container>
             <S.Background source={background}>
@@ -38,24 +67,53 @@ export default ({navigation: navigate}) => {
                         <S.Logo source={logo}/>
                         <S.DataContainer>
                             <S.InputContainer>
-                                <S.InputCircle>
+                                <S.InputCircle style={
+                                    {
+                                        width: isPerformingAnyAction ? widthAnimation.interpolate({
+                                            inputRange: [20, 100],
+                                            outputRange: ['20%', '100%'],
+                                        }) : 50
+                                    }
+                                }>
                                     <S.InputIcon name="user"/>
                                 </S.InputCircle>
-                                <S.InputField>
-                                    <S.InputText>Input</S.InputText>
-                                </S.InputField>
+                                <S.InputField
+                                    onChangeText={setEmail} autoCompleteType="email"
+                                    keyboardType="email-address" value={email}
+                                    placeholder={isPerformingAnyAction ? '' : 'E-mail'}
+                                    returnKeyType="next" editable={!isPerformingAnyAction}
+                                    textContentType="emailAddress" onSubmitEditing={handleEmailSubmitEditing}
+                                />
                             </S.InputContainer>
-                            <S.InputContainer>
-                                <S.InputCircle>
+                            <S.InputContainer style={{flexDirection: isPerformingAnyAction ? 'row-reverse' : 'row'}}>
+                                <S.InputCircle style={
+                                    {
+                                        width: isPerformingAnyAction ? widthAnimation.interpolate({
+                                            inputRange: [20, 100],
+                                            outputRange: ['20%', '100%'],
+                                        }) : 50
+                                    }
+                                }>
                                     <S.InputIcon name="lock"/>
                                 </S.InputCircle>
-                                <S.InputField>
-                                    <S.InputText>Input</S.InputText>
-                                </S.InputField>
+                                <S.InputField
+                                    onChangeText={setPassword} autoCompleteType="password"
+                                    clearTextOnFocus value={password}
+                                    placeholder={isPerformingAnyAction ? '' : 'Senha'}
+                                    onSubmitEditing={attemptCredentials} returnKeyType="done"
+                                    secureTextEntry selectTextOnFocus textContentType="password"
+                                    ref={setPasswordField} editable={!isPerformingAnyAction}
+                                />
                             </S.InputContainer>
-                            <S.InputContainer submit={true}>
-                                <S.SubmitButton>
-                                    <S.SubmitButtonText>LOGIN</S.SubmitButtonText>
+                            <S.InputContainer submit>
+                                <S.SubmitButton onPress={attemptCredentials} disabled={isPerformingAnyAction}>
+                                    {!isPerformingAnyAction ?
+                                        (<S.SubmitButtonText>LOGIN</S.SubmitButtonText>) :
+                                        (<S.LoadingContainer>
+                                            <S.SubmitButtonText>CARREGANDO</S.SubmitButtonText>
+                                            <Loading/>
+                                        </S.LoadingContainer>)
+                                    }
                                 </S.SubmitButton>
                             </S.InputContainer>
                         </S.DataContainer>

@@ -1,22 +1,21 @@
 import styled from 'styled-components/native';
 import Colors from '../constants/Colors';
 import { EvilIcons } from '@expo/vector-icons';
-import {Dimensions} from "react-native";
+import {Dimensions, Animated} from "react-native";
 
 const {primaryColor, secondColor} = Colors;
 const {width} = Dimensions.get('screen');
 
 export const Container = styled.View`
   flex: 1;
-  z-index: 1;
 `;
 export const Background = styled.ImageBackground`
   width: 100%;
   height: 100%;
-  z-index: 1;
+  flex: 1;
   resize-mode: cover;
 `;
-export const scroll = styled.ScrollView``;
+export const scroll = styled.KeyboardAvoidingView.attrs({behavior: 'position', keyboardVerticalOffset: -64})``;
 export const Header = styled.Image`
   width: 100%;
   height: 200px;
@@ -40,7 +39,7 @@ export const InputContainer = styled.View`
   border-radius: 50px;
   margin: ${({submit}) => !!submit ? 15 : 5}px 0;
 `;
-export const InputCircle = styled.View`
+export const InputCircle = styled(Animated.View)`
   width: 50px;
   height: 50px;
   background-color: white;
@@ -51,13 +50,16 @@ export const InputCircle = styled.View`
 export const InputIcon = styled(EvilIcons).attrs({size: 35})`
   color: ${primaryColor};
 `;
-export const InputField = styled.TextInput`
+export const InputField = styled.TextInput.attrs({
+    selectionColor: secondColor,
+    autoCorrect: false,
+    placeholderTextColor: 'white'
+})`
   background-color: transparent;
   width: 100%;
-  padding-left: 80px;
+  padding-left: 60px;
+  padding-right: 20px;
   margin-left: -50px;
-`;
-export const InputText = styled.Text`
   color: white;
 `;
 export const SubmitButton = styled.TouchableOpacity`
@@ -98,4 +100,7 @@ export const ForgotPasswordButton = styled.TouchableOpacity`
 `;
 export const ForgotPasswordButtonText = styled.Text`
   color: white;
+`;
+export const LoadingContainer = styled.View`
+  flex-direction: row;
 `;
