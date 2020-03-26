@@ -3,7 +3,7 @@ import Colors from '../constants/Colors';
 import { EvilIcons } from '@expo/vector-icons';
 import {Dimensions, Animated} from "react-native";
 
-const {primaryColor, secondColor} = Colors;
+const {primaryColor, secondColor, selectionColor} = Colors;
 const {width} = Dimensions.get('screen');
 
 export const Container = styled.View`
@@ -51,7 +51,7 @@ export const InputIcon = styled(EvilIcons).attrs({size: 35})`
   color: ${primaryColor};
 `;
 export const InputField = styled.TextInput.attrs({
-    selectionColor: secondColor,
+    selectionColor,
     autoCorrect: false,
     placeholderTextColor: 'white'
 })`

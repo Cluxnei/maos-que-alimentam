@@ -4,5 +4,6 @@ const secondColor = '#ff2669';
 export default {
   primaryColor,
   secondColor,
-  loadingColor: 'black'
+  loadingColor: 'black',
+  selectionColor: 'white'
 };
