@@ -25,6 +25,15 @@
     ],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.cluxnei.mqa",
+      "versionCode": 1
+    },
+    "androidStatusBar": {
+      "backgroundColor": "#ffffff",
+      "barStyle": "dark-content",
+      "animated": true
     }
   }
 }
