@@ -1,8 +1,9 @@
 import styled from 'styled-components/native';
+import AnimatedEllipsis from 'react-native-animated-ellipsis';
 
-export const Container = styled.View`
-  flex: 1;
-  justify-content: center;
+export const Loading = styled(AnimatedEllipsis)`
+  color: ${({color}) => color};
+  padding-top: 0;
+  margin-top: 0;
+  height: 100%;
 `;
-
-export const Loading = styled.ActivityIndicator``;

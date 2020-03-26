@@ -4,5 +4,5 @@ const secondColor = '#ff2669';
 export default {
   primaryColor,
   secondColor,
-  loadingColor: 'pink'
+  loadingColor: 'black'
 };
