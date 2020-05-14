@@ -50,7 +50,8 @@ export default ({navigation: navigate}) => {
         }, 3000);
     };
     const loginUser = async () => {
-        const [token, user] = [await getData(TokenKey), await getData(UserKey)];
+        const [token, user] = await Promise.all([getData(TokenKey), getData(UserKey)]);
+        console.log(user, token);
         if (validUserToken(user, token)) {
             return navigate('Home');
         }
