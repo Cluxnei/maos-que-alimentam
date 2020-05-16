@@ -1,16 +1,18 @@
 import React, {useEffect, useState} from 'react';
-import {Animated} from 'react-native';
+import {Animated, Alert} from 'react-native';
 import Loading from '../components/Loading';
 import * as S from '../styles/Login';
-import {getData} from "../storage";
-import {TokenKey, UserKey} from "../storage/Keys";
-import {validUserToken} from "../constants/Validate";
+import {getData, storeData} from "../storage";
+import {keys} from "../storage/Keys";
+import {validEmail, validPassword, validUserToken} from "../constants/Validate";
 import watermark from '../assets/watermark.png';
 import logo from '../assets/logo.png';
 import background from '../assets/background.png';
 import {delay} from "../constants/Utils";
+import routes from "../api/Routes";
+import axios from "../api/index";
 
-export default ({navigation: navigate}) => {
+export default ({navigation: {navigate}}) => {
     //#region states
     const [isPerformingAnyAction, setIsPerformingAnyAction] = useState(false);
     const [email, setEmail] = useState('');
@@ -41,17 +43,41 @@ export default ({navigation: navigate}) => {
     };
     //#endregion
     //#region methods
-    const attemptCredentials = () => {
+    const attemptLogin = async (email, password) => {
+        try {
+            const {data: {success, result}} = await axios.post(routes.login, {email, password});
+            return {success, result};
+        } catch (e) {
+            return false;
+        }
+    };
+    const attemptCredentials = async() => {
         setIsPerformingAnyAction(true);
+        if (!validEmail(email) || !validPassword(password)) {
+            setIsPerformingAnyAction(false);
+            return Alert.alert('Ops...', 'Preencha corretamente os campos');
+        }
         startAnimation();
-        // Simulate request
-        setTimeout(() => {
-            resetAnimation().then(() => setIsPerformingAnyAction(false));
-        }, 3000);
+        const loginResponse = await attemptLogin(email.trim(), password.trim());
+        await resetAnimation();
+        setIsPerformingAnyAction(false);
+        if (!loginResponse) {
+            return Alert.alert('Ops...', 'Erro ao efetuar login, verifique sua conexão.');
+        }
+        console.log(loginResponse)
+        const {success, result} = loginResponse;
+        if (!success) {
+            return Alert.alert(result, null);
+        }
+        const {user, token: accessToken} = result;
+        if (!validUserToken(user, accessToken)) {
+            return Alert.alert('Ops...', 'Faça login novamente por favor.');
+        }
+        await Promise.all([storeData(keys.token, accessToken), storeData(keys.user, user)]);
+        await loginUser();
     };
     const loginUser = async () => {
-        const [token, user] = await Promise.all([getData(TokenKey), getData(UserKey)]);
-        console.log(user, token);
+        const [token, user] = await Promise.all([getData(keys.token), getData(keys.user)]);
         if (validUserToken(user, token)) {
             return navigate('Home');
         }
