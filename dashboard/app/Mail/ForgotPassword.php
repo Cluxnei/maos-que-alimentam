@@ -10,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 
 class ForgotPassword extends Mailable implements ShouldQueue
 {
-    public $user, $password;
+    public $user, $password, $sub;
 
     use Queueable, SerializesModels;
 
@@ -24,6 +24,7 @@ class ForgotPassword extends Mailable implements ShouldQueue
     {
         $this->user = $user;
         $this->password = $password;
+        $this->sub = 'Mãos que alimentam - Nova senha';
     }
 
     /**
@@ -33,6 +34,6 @@ class ForgotPassword extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->view('emails.forgotPassword');
+        return $this->subject($this->sub)->view('emails.forgotPassword');
     }
 }

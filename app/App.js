@@ -5,6 +5,7 @@ import LoginScreen from "./screens/LoginScreen";
 import HomeScreen from "./screens/HomeScreen";
 import {StatusBar} from "react-native";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
+import Colors from "./constants/Colors";
 
 const Stack = createStackNavigator();
 
@@ -18,9 +19,12 @@ const Options = {
     ForgotPassword: {
         title: 'Esqueci minha senha',
         headerStyle: {
-            elevation: 0, // remove shadow on Android
-            shadowOpacity: 0, // remove shadow on iOS
+            height: 100,
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
         },
+        headerTintColor: Colors.secondColor
     }
 };
 

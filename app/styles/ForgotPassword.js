@@ -97,13 +97,6 @@ export const SingUpButtonText = styled.Text`
   color: white;
   font-weight: bold;
 `;
-export const ForgotPasswordButton = styled.TouchableOpacity`
-  align-items: center;
-  margin-top: 30px;
-`;
-export const ForgotPasswordButtonText = styled.Text`
-  color: white;
-`;
 export const LoadingContainer = styled.View`
   flex-direction: row;
 `;
