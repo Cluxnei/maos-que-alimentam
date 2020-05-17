@@ -6,6 +6,7 @@ import HomeScreen from "./screens/HomeScreen";
 import {StatusBar} from "react-native";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 import Colors from "./constants/Colors";
+import BasicInformationScreen from "./screens/Registration/BasicInformationScreen";
 
 const Stack = createStackNavigator();
 
@@ -17,7 +18,7 @@ const Options = {
         header: () => null
     },
     ForgotPassword: {
-        title: 'Esqueci minha senha',
+        title: 'RECUPERAR SENHA',
         headerStyle: {
             height: 100,
             elevation: 0,
@@ -25,6 +26,11 @@ const Options = {
             borderBottomWidth: 0,
         },
         headerTintColor: Colors.secondColor
+    },
+    Registration: {
+        BasicInformation: {
+            title: 'DADOS BÁSICOS'
+        },
     }
 };
 
@@ -35,6 +41,7 @@ export default () => (
             <Stack.Navigator>
                 <Stack.Screen name="Login" component={LoginScreen} options={Options.LoginScreen}/>
                 <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={Options.ForgotPassword}/>
+                <Stack.Screen name="BasicInformation" component={BasicInformationScreen} options={Options.Registration.BasicInformation}/>
                 <Stack.Screen name="Home" component={HomeScreen} options={Options.HomeScreen}/>
             </Stack.Navigator>
         </NavigationContainer>

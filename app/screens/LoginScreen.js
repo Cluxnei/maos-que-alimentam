@@ -88,7 +88,7 @@ export default (props) => {
         loginUser().then(() => setIsPerformingAnyAction(false));
     };
     const handleForgotPasswordPress = () => props.navigation.navigate('ForgotPassword', {email});
-
+    const handleSingUpPress = () => props.navigation.navigate('BasicInformation');
     //#endregion
     useEffect(init, []);
     useEffect(() => {
@@ -166,7 +166,7 @@ export default (props) => {
                         <S.LinksContainer>
                             <S.SingUpContainer>
                                 <S.QuestionText>Não tem uma conta?</S.QuestionText>
-                                <S.SingUpButton>
+                                <S.SingUpButton onPress={handleSingUpPress}>
                                     <S.SingUpButtonText>
                                         Cadastre-se
                                     </S.SingUpButtonText>

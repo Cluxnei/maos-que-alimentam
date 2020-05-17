@@ -66,6 +66,7 @@ export default ({route, navigation}) => {
         }
         return setMessage('Enviamos uma nova senha em seu email');
     };
+    const handleSingUpPress = () => navigation.navigate('BasicInformation');
     useEffect(() => {
         if (message !== '') {
             setMessage('');
@@ -120,7 +121,7 @@ export default ({route, navigation}) => {
                         <S.LinksContainer>
                             <S.SingUpContainer>
                                 <S.QuestionText>Não tem uma conta?</S.QuestionText>
-                                <S.SingUpButton>
+                                <S.SingUpButton onPress={handleSingUpPress}>
                                     <S.SingUpButtonText>
                                         Cadastre-se
                                     </S.SingUpButtonText>
