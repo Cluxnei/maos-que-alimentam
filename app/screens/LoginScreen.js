@@ -87,6 +87,8 @@ export default (props) => {
         setIsPerformingAnyAction(true);
         loginUser().then(() => setIsPerformingAnyAction(false));
     };
+    const handleForgotPasswordPress = () => props.navigation.navigate('ForgotPassword', {email});
+
     //#endregion
     useEffect(init, []);
     useEffect(() => {
@@ -170,7 +172,7 @@ export default (props) => {
                                     </S.SingUpButtonText>
                                 </S.SingUpButton>
                             </S.SingUpContainer>
-                            <S.ForgotPasswordButton>
+                            <S.ForgotPasswordButton onPress={handleForgotPasswordPress}>
                                 <S.ForgotPasswordButtonText>
                                     Esqueceu sua senha?
                                 </S.ForgotPasswordButtonText>

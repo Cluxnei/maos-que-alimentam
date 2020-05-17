@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Animated} from 'react-native';
 import Loading from '../components/Loading';
-import * as S from '../styles/Login';
+import * as S from '../styles/ForgotPassword';
 import {validEmail} from "../constants/Validate";
 import watermark from '../assets/watermark.png';
 import logo from '../assets/logo.png';
@@ -105,31 +105,10 @@ export default ({route, navigation}) => {
                                     style={{color: isPerformingAnyAction ? 'transparent' : 'white'}}
                                 />
                             </S.InputContainer>
-                            <S.InputContainer>
-                                <S.InputCircle style={
-                                    {
-                                        width: isPerformingAnyAction ? widthAnimation.interpolate({
-                                            inputRange: [20, 100],
-                                            outputRange: ['20%', '100%'],
-                                        }) : 50,
-                                    }
-                                }>
-                                    <S.InputIcon name="lock"/>
-                                </S.InputCircle>
-                                <S.InputField
-                                    onChangeText={setPassword} autoCompleteType="password"
-                                    clearTextOnFocus value={password}
-                                    placeholder={isPerformingAnyAction ? '' : 'Senha'}
-                                    onSubmitEditing={attemptCredentials} returnKeyType="done"
-                                    secureTextEntry selectTextOnFocus textContentType="password"
-                                    ref={setPasswordField} editable={!isPerformingAnyAction}
-                                    style={{color: isPerformingAnyAction ? 'transparent' : 'white'}}
-                                />
-                            </S.InputContainer>
                             <S.InputContainer submit>
                                 <S.SubmitButton onPress={attemptCredentials} disabled={isPerformingAnyAction}>
                                     {!isPerformingAnyAction ?
-                                        (<S.SubmitButtonText>LOGIN</S.SubmitButtonText>) :
+                                        (<S.SubmitButtonText>SOLICITAR NOVA SENHA</S.SubmitButtonText>) :
                                         (<S.LoadingContainer>
                                             <S.SubmitButtonText>CARREGANDO</S.SubmitButtonText>
                                             <Loading/>
@@ -147,11 +126,6 @@ export default ({route, navigation}) => {
                                     </S.SingUpButtonText>
                                 </S.SingUpButton>
                             </S.SingUpContainer>
-                            <S.ForgotPasswordButton>
-                                <S.ForgotPasswordButtonText>
-                                    Esqueceu sua senha?
-                                </S.ForgotPasswordButtonText>
-                            </S.ForgotPasswordButton>
                         </S.LinksContainer>
                     </S.body>
                 </S.scroll>

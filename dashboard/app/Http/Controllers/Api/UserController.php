@@ -37,6 +37,10 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     final public function forgotPassword (Request $request): JsonResponse
     {
         try {
