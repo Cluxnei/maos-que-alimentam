@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,3 +14,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/login', 'Api\UserController@login')->name('api.login');
+Route::post('/forgot-password', 'Api\UserController@forgotPassword')->name('api.forgotPassword');
