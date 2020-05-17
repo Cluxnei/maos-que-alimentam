@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Animated, Alert} from 'react-native';
+import {Animated} from 'react-native';
 import Loading from '../components/Loading';
 import * as S from '../styles/Login';
 import {getData, storeData} from "../storage";
@@ -8,7 +8,7 @@ import {validEmail, validPassword, validUserToken} from "../constants/Validate";
 import watermark from '../assets/watermark.png';
 import logo from '../assets/logo.png';
 import background from '../assets/background.png';
-import {delay, resetNavigation} from "../constants/Utils";
+import {delay} from "../constants/Utils";
 import routes from "../api/Routes";
 import axios from "../api/index";
 
@@ -17,6 +17,7 @@ export default (props) => {
     const [isPerformingAnyAction, setIsPerformingAnyAction] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [message, setMessage] = useState(undefined);
     const [passwordField, setPasswordField] = useState(undefined);
     const [widthAnimation] = useState(new Animated.Value(20));
     //#endregion
@@ -53,25 +54,25 @@ export default (props) => {
     };
     const attemptCredentials = async() => {
         setIsPerformingAnyAction(true);
+        setMessage('');
         if (!validEmail(email) || !validPassword(password)) {
             setIsPerformingAnyAction(false);
-            return Alert.alert('Ops...', 'Preencha corretamente os campos');
+            return setMessage('Ops... preencha corretamente os campos');
         }
         startAnimation();
         const loginResponse = await attemptLogin(email.trim(), password.trim());
         await resetAnimation();
         setIsPerformingAnyAction(false);
         if (!loginResponse) {
-            return Alert.alert('Ops...', 'Erro ao efetuar login, verifique sua conexão.');
+            return setMessage('Ops... erro ao efetuar login, verifique sua conexão.');
         }
-        console.log(loginResponse)
         const {success, result} = loginResponse;
         if (!success) {
-            return Alert.alert(result, null);
+            return setMessage(result);
         }
         const {user, token: accessToken} = result;
         if (!validUserToken(user, accessToken)) {
-            return Alert.alert('Ops...', 'Faça login novamente por favor.');
+            return setMessage('Ops... faça login novamente por favor.');
         }
         await Promise.all([storeData(keys.token, accessToken), storeData(keys.user, user)]);
         await loginUser();
@@ -79,7 +80,7 @@ export default (props) => {
     const loginUser = async () => {
         const [token, user] = await Promise.all([getData(keys.token), getData(keys.user)]);
         if (validUserToken(user, token)) {
-            return resetNavigation(props);
+            return props.navigation.navigate('Home', {reset: true});
         }
     };
     const init = () => {
@@ -88,6 +89,11 @@ export default (props) => {
     };
     //#endregion
     useEffect(init, []);
+    useEffect(() => {
+        if (message !== '') {
+            setMessage('');
+        }
+    }, [email, password]);
     //#region render
     return (
         <S.Container>
@@ -97,6 +103,11 @@ export default (props) => {
                     <S.body>
                         <S.Logo source={logo}/>
                         <S.DataContainer>
+                            {message ? (
+                                <S.MessageBox>
+                                    <S.MessageText>{message}</S.MessageText>
+                                </S.MessageBox>
+                            ) : null}
                             <S.InputContainer>
                                 <S.InputCircle style={
                                     {

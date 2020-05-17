@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 import Colors from '../constants/Colors';
 import { EvilIcons } from '@expo/vector-icons';
-import {Dimensions, Animated} from "react-native";
+import {Dimensions, Animated, KeyboardAvoidingView} from "react-native";
 
 const {primaryColor, secondColor, selectionColor} = Colors;
 const {width} = Dimensions.get('screen');
@@ -15,10 +15,13 @@ export const Background = styled.ImageBackground`
   flex: 1;
   resize-mode: cover;
 `;
-export const scroll = styled.KeyboardAvoidingView.attrs({behavior: 'position', keyboardVerticalOffset: -64})``;
+export const scroll = styled(KeyboardAvoidingView).attrs({
+    behavior: 'position',
+    keyboardVerticalOffset: -64
+})``;
 export const Header = styled.Image`
   width: 100%;
-  height: 200px;
+  height: 90px;
 `;
 export const body = styled.View`
   margin: 0 20px;
@@ -28,9 +31,7 @@ export const Logo = styled.Image`
   resize-mode: contain;
   width: 90%;
 `;
-export const DataContainer = styled.View`
-  margin-top: 10px;
-`;
+export const DataContainer = styled.View``;
 export const InputContainer = styled.View`
   flex-direction: row;
   width: ${width * 0.7}px;
@@ -103,4 +104,17 @@ export const ForgotPasswordButtonText = styled.Text`
 `;
 export const LoadingContainer = styled.View`
   flex-direction: row;
+`;
+export const MessageBox = styled.View`
+  background-color: white;
+  padding: 10px 20px;
+  border-radius: 15px;
+  width: ${width * 0.7}px;
+  margin-bottom: 10px;
+`;
+export const MessageText = styled.Text`
+  color: ${primaryColor};
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
 `;
