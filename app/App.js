@@ -11,7 +11,9 @@ const Options = {
     LoginScreen: {
         header: () => null
     },
-    HomeScreen: {},
+    HomeScreen: {
+        header: () => null
+    },
 };
 
 export default () => (

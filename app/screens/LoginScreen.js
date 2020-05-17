@@ -8,11 +8,11 @@ import {validEmail, validPassword, validUserToken} from "../constants/Validate";
 import watermark from '../assets/watermark.png';
 import logo from '../assets/logo.png';
 import background from '../assets/background.png';
-import {delay} from "../constants/Utils";
+import {delay, resetNavigation} from "../constants/Utils";
 import routes from "../api/Routes";
 import axios from "../api/index";
 
-export default ({navigation: {navigate}}) => {
+export default (props) => {
     //#region states
     const [isPerformingAnyAction, setIsPerformingAnyAction] = useState(false);
     const [email, setEmail] = useState('');
@@ -79,7 +79,7 @@ export default ({navigation: {navigate}}) => {
     const loginUser = async () => {
         const [token, user] = await Promise.all([getData(keys.token), getData(keys.user)]);
         if (validUserToken(user, token)) {
-            return navigate('Home');
+            return resetNavigation(props);
         }
     };
     const init = () => {
