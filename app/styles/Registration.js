@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 import Colors from '../constants/Colors';
-import {AntDesign, Entypo, FontAwesome} from '@expo/vector-icons';
+import {AntDesign, Entypo, FontAwesome, FontAwesome5} from '@expo/vector-icons';
 import {Dimensions, Animated, KeyboardAvoidingView} from "react-native";
 import { TextInputMask } from 'react-native-masked-text';
 
@@ -64,11 +64,42 @@ export const PhoneIcon = styled(FontAwesome).attrs({
 })`
   color: ${primaryColor};
 `;
+export const StreetIcon = styled(Entypo).attrs({
+    size: 35,
+    name: 'location-pin'
+})`
+  color: ${primaryColor};
+`;
+export const CityIcon = styled(FontAwesome5).attrs({
+    size: 22,
+    name: 'city'
+})`
+  color: ${primaryColor};
+`;
+export const CepIcon = styled(FontAwesome5).attrs({
+    size: 25,
+    name: 'map-marked-alt'
+})`
+  color: ${primaryColor};
+`;
 export const CnpjInputField = styled(TextInputMask).attrs({
     selectionColor,
     autoCorrect: false,
     placeholderTextColor: 'white',
     type: 'cnpj'
+})`
+  background-color: transparent;
+  width: 100%;
+  padding-left: 60px;
+  padding-right: 20px;
+  margin-left: -50px;
+  color: white;
+`;
+export const CepInputField = styled(TextInputMask).attrs({
+    selectionColor,
+    autoCorrect: false,
+    placeholderTextColor: 'white',
+    type: 'zip-code'
 })`
   background-color: transparent;
   width: 100%;

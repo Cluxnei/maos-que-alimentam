@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {resetNavigation} from "../constants/Utils";
-import {TouchableOpacity, Text} from 'react-native';
+import * as S from "../styles/Home";
 import {storeData} from "../storage";
 import {keys} from "../storage/Keys";
 
@@ -18,10 +18,17 @@ export default ({navigation, route}) => {
         return () => mount = false;
     }, []);
     return (
-        <>
-            <TouchableOpacity onPress={handleLogoutButtonPress}>
-                <Text>Logout</Text>
-            </TouchableOpacity>
-        </>
+        <S.Container>
+            <S.Background>
+                <S.Doador>
+                    <S.Doar />
+                    <S.Text>Doar</S.Text>
+                </S.Doador>
+                <S.Receptor>
+                    <S.Receber />
+                    <S.Text>Receber</S.Text>
+                </S.Receptor>
+            </S.Background>
+        </S.Container>
     );
 };

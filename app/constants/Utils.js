@@ -19,11 +19,17 @@ export const getRegistration = async () => {
         getData(keys.registration.cnpj),
         getData(keys.registration.phone),
         getData(keys.registration.step),
+        getData(keys.registration.cep),
+        getData(keys.registration.logradouro),
+        getData(keys.registration.city),
     ]);
     return {
         name: registration[0],
         cnpj: registration[1],
         phone: registration[2],
         step: registration[3],
+        cep: registration[4],
+        logradouro: registration[5],
+        city: registration[6],
     };
 };

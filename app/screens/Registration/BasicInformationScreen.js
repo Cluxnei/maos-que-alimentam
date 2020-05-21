@@ -4,7 +4,7 @@ import Loading from '../../components/Loading';
 import * as S from '../../styles/Registration';
 import {storeData} from "../../storage";
 import {keys} from "../../storage/Keys";
-import {validEmail, validNotEmpty, validPassword, validPhone, validUserToken} from "../../constants/Validate";
+import {validNotEmpty, validPhone} from "../../constants/Validate";
 import logo from '../../assets/logo.png';
 import background from '../../assets/background.png';
 import {delay, getRegistration} from "../../constants/Utils";
@@ -75,8 +75,9 @@ export default ({navigation}) => {
             setName(name);
             setCnpj(cnpj);
             setPhone(phone);
-            if (!step) {
-                return setIsPerformingAnyAction(false);
+            setIsPerformingAnyAction(false);
+            if (!step || step === 'BasicInformation') {
+                return;
             }
             navigation.navigate(step);
         });

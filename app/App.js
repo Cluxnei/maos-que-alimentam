@@ -7,6 +7,7 @@ import {StatusBar} from "react-native";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 import Colors from "./constants/Colors";
 import BasicInformationScreen from "./screens/Registration/BasicInformationScreen";
+import LocationInformationScreen from "./screens/Registration/LocationInformationScreen";
 
 const Stack = createStackNavigator();
 
@@ -31,6 +32,9 @@ const Options = {
         BasicInformation: {
             title: 'DADOS BÁSICOS'
         },
+        LocationInformation: {
+            title: 'DADOS DE LOCALIZAÇÃO'
+        }
     }
 };
 
@@ -42,6 +46,7 @@ export default () => (
                 <Stack.Screen name="Login" component={LoginScreen} options={Options.LoginScreen}/>
                 <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={Options.ForgotPassword}/>
                 <Stack.Screen name="BasicInformation" component={BasicInformationScreen} options={Options.Registration.BasicInformation}/>
+                <Stack.Screen name="LocationInformation" component={LocationInformationScreen} options={Options.Registration.LocationInformation}/>
                 <Stack.Screen name="Home" component={HomeScreen} options={Options.HomeScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
