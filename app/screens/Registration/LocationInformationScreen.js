@@ -4,45 +4,56 @@ import Loading from '../../components/Loading';
 import * as S from '../../styles/Registration';
 import {storeData} from "../../storage";
 import {keys} from "../../storage/Keys";
-import {validCep} from "../../constants/Validate";
+import {validCep, validNotEmpty} from "../../constants/Validate";
 import logo from '../../assets/logo.png';
 import background from '../../assets/background.png';
 import {delay, getRegistration} from "../../constants/Utils";
-import searchCep from 'cep-promise';
+import searchZipcode from 'cep-promise';
 
 export default ({navigation}) => {
     //#region states
     const [isPerformingAnyAction, setIsPerformingAnyAction] = useState(false);
-    const [cep, setCep] = useState('');
-    const [logradouro, setLogradouro] = useState('');
+    const [zipcode, setZipcode] = useState('');
+    const [street, setStreet] = useState('');
     const [city, setCity] = useState('');
     const [message, setMessage] = useState(undefined);
-    const [cepField, setCepField] = useState(undefined);
-    const [logradouroField, setLogradouroField] = useState(undefined);
+    const [zipcodeField, setZipcodeField] = useState(undefined);
+    const [streetField, setStreetField] = useState(undefined);
     const [cityField, setCityField] = useState(undefined);
+    const [notOnLoad, setNotOnLoad] = useState(true);
     const [widthAnimation] = useState(new Animated.Value(20));
     //#endregion
     //#region handlers
-    const handleCepSubmitEditing = async () => {
-        setIsPerformingAnyAction(true);
+    const findZipcode = async (zipcode) => {
         try {
-            const rawCep = cepField.getRawValue();
-            if (!validCep(rawCep)) {
-                setIsPerformingAnyAction(false);
-                return setMessage('Cep inválido');
-            }
-            const {street: s, city: c} = await searchCep(rawCep);
-            setLogradouro(s);
-            setCity(c);
+            const {street, city} = await searchZipcode(zipcode);
+            return {street, city};
         } catch (e) {
-            setMessage('Cep não encontrado, insira os dados manualmente.')
-        }
-        setIsPerformingAnyAction(false);
-        if (logradouroField) {
-            logradouroField.focus();
+            return {error: true};
         }
     };
-    const handleLogradouroSubmitEditing = () => {
+    const handleZipcodeSubmitEditing = async () => {
+        setIsPerformingAnyAction(true);
+        const rawZipcode = zipcodeField.getRawValue();
+        if (!validCep(rawZipcode)) {
+            setIsPerformingAnyAction(false);
+            return setMessage('Cep inválido');
+        }
+        startAnimation();
+        const location = await findZipcode(rawZipcode);
+        await resetAnimation();
+        if (location.error) {
+            setIsPerformingAnyAction(false);
+            return setMessage('Cep não encontrado, insira os dados manualmente.');
+        }
+        setStreet(location.street);
+        setCity(location.city);
+        setIsPerformingAnyAction(false);
+        if (streetField) {
+            streetField.focus();
+        }
+    };
+    const handleStreetSubmitEditing = () => {
         if (cityField) {
             cityField.focus();
         }
@@ -52,17 +63,20 @@ export default ({navigation}) => {
     };
     const handleNextPress = async () => {
         setIsPerformingAnyAction(true);
-        const rawCep = cepField.getRawValue();
-        if (!validCep(rawCep)) {
+        const rawZipcode = zipcodeField.getRawValue();
+        if (!validCep(rawZipcode)) {
             setIsPerformingAnyAction(false);
-            return setMessage('Preencha corretamente os campos');
+            return setMessage('CEP Inválido!');
+        }
+        if (!validNotEmpty(street) || !validNotEmpty(city)) {
+            setIsPerformingAnyAction(false);
+            return setMessage('Dados incorretos!');
         }
         startAnimation();
         await Promise.all([
-            storeData(keys.registration.cep, rawCep),
-            storeData(keys.registration.logradouro, logradouro),
-            storeData(keys.registration.city, city),
-            storeData(keys.registration.step, 'AuthInformation')
+            storeData(keys.registration.zipcode, rawZipcode),
+            storeData(keys.registration.street, street),
+            storeData(keys.registration.city, city)
         ]);
         await resetAnimation();
         setIsPerformingAnyAction(false);
@@ -88,15 +102,13 @@ export default ({navigation}) => {
 
     const init = () => {
         setIsPerformingAnyAction(true);
-        getRegistration().then(({cep, logradouro, city, step}) => {
-            setCep(cep);
-            setLogradouro(logradouro);
+        setNotOnLoad(false);
+        getRegistration().then(({zipcode, street, city}) => {
+            setZipcode(zipcode);
+            setStreet(street);
             setCity(city);
             setIsPerformingAnyAction(false);
-            if (!step || step === 'LocationInformation') {
-                return;
-            }
-            navigation.navigate(step);
+            setNotOnLoad(true);
         });
     };
     //#endregion
@@ -105,7 +117,12 @@ export default ({navigation}) => {
         if (message !== '') {
             setMessage('');
         }
-    }, [cep, logradouro, city]);
+    }, [zipcode, street, city]);
+    useEffect(() => {
+        if (zipcodeField && notOnLoad && zipcodeField.getRawValue().length === 8) {
+            handleZipcodeSubmitEditing().done()
+        }
+    }, [zipcode])
     //#region render
     return (
         <S.Container>
@@ -128,13 +145,13 @@ export default ({navigation}) => {
                                         }) : 50
                                     }
                                 }>
-                                    <S.CepIcon />
+                                    <S.ZipcodeIcon />
                                 </S.InputCircle>
                                 <S.CepInputField
-                                    onChangeText={(text) => setCep(text)} autoCompleteType="postal-code"
-                                    value={cep} placeholder={isPerformingAnyAction ? '' : 'CEP'}
+                                    onChangeText={(text) => setZipcode(text)} autoCompleteType="postal-code"
+                                    value={zipcode} placeholder={isPerformingAnyAction ? '' : 'CEP'}
                                     returnKeyType="next" editable={!isPerformingAnyAction}
-                                    textContentType="postalCode" ref={setCepField} onSubmitEditing={handleCepSubmitEditing}
+                                    textContentType="postalCode" ref={setZipcodeField} onSubmitEditing={handleZipcodeSubmitEditing}
                                     style={{color: isPerformingAnyAction ? 'transparent' : 'white'}}
                                 />
                             </S.InputContainer>
@@ -150,13 +167,13 @@ export default ({navigation}) => {
                                     <S.StreetIcon />
                                 </S.InputCircle>
                                 <S.InputField
-                                    onChangeText={setLogradouro} autoCompleteType="street-address"
-                                    keyboardType="default" value={logradouro}
+                                    onChangeText={setStreet} autoCompleteType="street-address"
+                                    keyboardType="default" value={street}
                                     placeholder={isPerformingAnyAction ? '' : 'Logradouro'}
                                     returnKeyType="done" editable={!isPerformingAnyAction}
-                                    textContentType="streetAddressLine1" ref={setLogradouroField}
+                                    textContentType="streetAddressLine1" ref={setStreetField}
                                     style={{color: isPerformingAnyAction ? 'transparent' : 'white'}}
-                                    onSubmitEditing={handleLogradouroSubmitEditing}
+                                    onSubmitEditing={handleStreetSubmitEditing}
                                 />
                             </S.InputContainer>
                             <S.InputContainer>

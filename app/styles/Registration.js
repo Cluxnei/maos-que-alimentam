@@ -59,7 +59,7 @@ export const PasswordIcon = styled(EvilIcons).attrs({
   color: ${primaryColor};
 `;
 export const ConfirmPasswordIcon = styled(AntDesign).attrs({
-    size: 35,
+    size: 26,
     name: 'lock'
 })`
   color: ${primaryColor};
@@ -94,7 +94,7 @@ export const CityIcon = styled(FontAwesome5).attrs({
 })`
   color: ${primaryColor};
 `;
-export const CepIcon = styled(FontAwesome5).attrs({
+export const ZipcodeIcon = styled(FontAwesome5).attrs({
     size: 25,
     name: 'map-marked-alt'
 })`

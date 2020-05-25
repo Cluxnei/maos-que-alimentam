@@ -67,8 +67,7 @@ export default ({navigation}) => {
         startAnimation();
         await Promise.all([
             storeData(keys.registration.email, email),
-            storeData(keys.registration.password, password),
-            storeData(keys.registration.step, 'AuthInformation')
+            storeData(keys.registration.password, password)
         ]);
         await resetAnimation();
         setIsPerformingAnyAction(false);
@@ -94,13 +93,9 @@ export default ({navigation}) => {
 
     const init = () => {
         setIsPerformingAnyAction(true);
-        getRegistration().then(({email, step}) => {
+        getRegistration().then(({email}) => {
             setEmail(email);
             setIsPerformingAnyAction(false);
-            if (!step || step === 'AuthInformation') {
-                return;
-            }
-            navigation.navigate(step);
         });
     };
     //#endregion
@@ -161,6 +156,27 @@ export default ({navigation}) => {
                                     onSubmitEditing={handlePasswordSubmitEditing} returnKeyType="next"
                                     secureTextEntry selectTextOnFocus textContentType="password"
                                     ref={setPasswordField} editable={!isPerformingAnyAction}
+                                    style={{color: isPerformingAnyAction ? 'transparent' : 'white'}}
+                                />
+                            </S.InputContainer>
+                            <S.InputContainer>
+                                <S.InputCircle style={
+                                    {
+                                        width: isPerformingAnyAction ? widthAnimation.interpolate({
+                                            inputRange: [20, 100],
+                                            outputRange: ['20%', '100%'],
+                                        }) : 50,
+                                    }
+                                }>
+                                    <S.ConfirmPasswordIcon />
+                                </S.InputCircle>
+                                <S.InputField
+                                    onChangeText={setConfirmPassword} autoCompleteType="password"
+                                    clearTextOnFocus value={confirmPassword}
+                                    placeholder={isPerformingAnyAction ? '' : 'Confirmar senha'}
+                                    onSubmitEditing={handleConfirmPasswordSubmitEditing} returnKeyType="done"
+                                    secureTextEntry selectTextOnFocus textContentType="password"
+                                    ref={setConfirmPasswordField} editable={!isPerformingAnyAction}
                                     style={{color: isPerformingAnyAction ? 'transparent' : 'white'}}
                                 />
                             </S.InputContainer>

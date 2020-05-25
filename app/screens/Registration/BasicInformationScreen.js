@@ -51,7 +51,9 @@ export default ({navigation}) => {
             return setMessage('CNPJ inválido.');
         }
         setIsPerformingAnyAction(true);
-        checkCnpj(rawCnpj).then(({success, result, error}) => {
+        startAnimation();
+        checkCnpj(rawCnpj).then(async ({success, result, error}) => {
+            await resetAnimation();
             if (error) {
                 setIsPerformingAnyAction(false);
                 return setMessage('Erro ao verificar CNPJ. Verifique sua conexão.');
@@ -96,8 +98,7 @@ export default ({navigation}) => {
         await Promise.all([
             storeData(keys.registration.name, name),
             storeData(keys.registration.cnpj, rawCnpj),
-            storeData(keys.registration.phone, rawPhone),
-            storeData(keys.registration.step, 'LocationInformation')
+            storeData(keys.registration.phone, rawPhone)
         ]);
         await resetAnimation();
         setIsPerformingAnyAction(false);
@@ -123,15 +124,11 @@ export default ({navigation}) => {
 
     const init = () => {
         setIsPerformingAnyAction(true);
-        getRegistration().then(({name, cnpj, phone, step}) => {
+        getRegistration().then(({name, cnpj, phone}) => {
             setName(name);
             setCnpj(cnpj);
             setPhone(phone);
             setIsPerformingAnyAction(false);
-            if (!step || step === 'BasicInformation') {
-                return;
-            }
-            navigation.navigate(step);
         });
     };
     //#endregion
