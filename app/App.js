@@ -8,6 +8,7 @@ import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 import Colors from "./constants/Colors";
 import BasicInformationScreen from "./screens/Registration/BasicInformationScreen";
 import LocationInformationScreen from "./screens/Registration/LocationInformationScreen";
+import AuthInformationScreen from "./screens/Registration/AuthInformationScreen";
 
 const Stack = createStackNavigator();
 
@@ -34,6 +35,9 @@ const Options = {
         },
         LocationInformation: {
             title: 'DADOS DE LOCALIZAÇÃO'
+        },
+        AuthInformation: {
+            title: 'DADOS DE AUTENTICAÇÃO'
         }
     }
 };
@@ -47,6 +51,7 @@ export default () => (
                 <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={Options.ForgotPassword}/>
                 <Stack.Screen name="BasicInformation" component={BasicInformationScreen} options={Options.Registration.BasicInformation}/>
                 <Stack.Screen name="LocationInformation" component={LocationInformationScreen} options={Options.Registration.LocationInformation}/>
+                <Stack.Screen name="AuthInformation" component={AuthInformationScreen} options={Options.Registration.AuthInformation}/>
                 <Stack.Screen name="Home" component={HomeScreen} options={Options.HomeScreen}/>
             </Stack.Navigator>
         </NavigationContainer>

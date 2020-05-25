@@ -9,6 +9,8 @@ import logo from '../../assets/logo.png';
 import background from '../../assets/background.png';
 import {delay, getRegistration} from "../../constants/Utils";
 import {validateCnpj} from "react-native-masked-text/lib/masks/cnpj.mask";
+import axios from '../../api/index';
+import routes from '../../api/Routes';
 
 export default ({navigation}) => {
     //#region states
@@ -27,7 +29,39 @@ export default ({navigation}) => {
             cnpjField.getElement().focus();
         }
     };
-    const handleCnpjSubmitEditing = () => {
+    const checkCnpj = async (cnpj) => {
+        try {
+            const {data: {success, result}} = await axios.post(routes.checkCnpj, {cnpj});
+            return {success, result};
+        } catch (e) {
+            return {error: true};
+        }
+    };
+    const checkPhone = async (phone) => {
+        try {
+            const {data: {success, result}} = await axios.post(routes.checkPhone, {phone});
+            return {success, result};
+        } catch (e) {
+            return {error: true};
+        }
+    };
+    const handleCnpjSubmitEditing = async () => {
+        const rawCnpj = cnpjField.getRawValue();
+        if (!validateCnpj(rawCnpj)) {
+            return setMessage('CNPJ inválido.');
+        }
+        setIsPerformingAnyAction(true);
+        checkCnpj(rawCnpj).then(({success, result, error}) => {
+            if (error) {
+                setIsPerformingAnyAction(false);
+                return setMessage('Erro ao verificar CNPJ. Verifique sua conexão.');
+            }
+            if (!success) {
+                setIsPerformingAnyAction(false);
+                return setMessage(result);
+            }
+        });
+        setIsPerformingAnyAction(false);
         if (phoneField) {
             phoneField.getElement().focus();
         }
@@ -41,6 +75,24 @@ export default ({navigation}) => {
             return setMessage('Preencha corretamente os campos');
         }
         startAnimation();
+        const validCnpj = await checkCnpj(rawCnpj);
+        if (validCnpj.error) {
+            setIsPerformingAnyAction(false);
+            return setMessage('Erro ao verificar CNPJ. Verifique sua conexão.');
+        }
+        if (!validCnpj.success) {
+            setIsPerformingAnyAction(false);
+            return setMessage(validCnpj.result);
+        }
+        const validCelPhone = await checkPhone(rawPhone);
+        if (validCelPhone.error) {
+            setIsPerformingAnyAction(false);
+            return setMessage('Erro ao verificar celular. Verifique sua conexão.');
+        }
+        if (!validCelPhone.success) {
+            setIsPerformingAnyAction(false);
+            return setMessage(validCelPhone.result);
+        }
         await Promise.all([
             storeData(keys.registration.name, name),
             storeData(keys.registration.cnpj, rawCnpj),
@@ -88,7 +140,7 @@ export default ({navigation}) => {
         if (message !== '') {
             setMessage('');
         }
-    }, [name]);
+    }, [name, cnpj, phone]);
     //#region render
     return (
         <S.Container>

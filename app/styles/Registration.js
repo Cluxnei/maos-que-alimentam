@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 import Colors from '../constants/Colors';
-import {AntDesign, Entypo, FontAwesome, FontAwesome5} from '@expo/vector-icons';
+import {AntDesign, Entypo, EvilIcons, FontAwesome, FontAwesome5} from '@expo/vector-icons';
 import {Dimensions, Animated, KeyboardAvoidingView} from "react-native";
 import { TextInputMask } from 'react-native-masked-text';
 
@@ -45,6 +45,24 @@ export const InputCircle = styled(Animated.View)`
   border-radius: 25px;
   align-items: center;
   justify-content: center;
+`;
+export const EmailIcon = styled(EvilIcons).attrs({
+    size: 35,
+    name: 'user'
+})`
+  color: ${primaryColor};
+`;
+export const PasswordIcon = styled(EvilIcons).attrs({
+    size: 35,
+    name: 'lock'
+})`
+  color: ${primaryColor};
+`;
+export const ConfirmPasswordIcon = styled(AntDesign).attrs({
+    size: 35,
+    name: 'lock'
+})`
+  color: ${primaryColor};
 `;
 export const NameIcon = styled(AntDesign).attrs({
     size: 35,

@@ -16,15 +16,16 @@ class Controller extends BaseController
     /**
      * @param $result
      * @param $errors
+     * @param null $statusCode
      * @return JsonResponse
      */
-    protected function jsonError($result, $errors): JsonResponse
+    protected function jsonError($result, $errors, $statusCode = null): JsonResponse
     {
         return response()->json([
             'success' => false,
             'result' => $result,
             'errors' => $errors
-        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        ], (is_null($statusCode) ? Response::HTTP_INTERNAL_SERVER_ERROR : $statusCode));
     }
 
     /**

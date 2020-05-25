@@ -41,7 +41,7 @@ class UserController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    final public function forgotPassword (Request $request): JsonResponse
+    final public function forgotPassword(Request $request): JsonResponse
     {
         try {
             $user = User::query()->where('email', '=', $request->email)->get();
@@ -60,6 +60,48 @@ class UserController extends Controller
             }
             event(new ForgotPassword($user->first(), $newPassword));
             return $this->jsonSuccess(null);
+        } catch (Exception $exception) {
+            return $this->jsonError(null, [$exception->getMessage()]);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    final public function checkEmail(Request $request): JsonResponse
+    {
+        try {
+            return !User::whereEmail($request->email)->exists() ? $this->jsonSuccess(null) :
+                $this->jsonError('Esse e-mail já está em uso.', null, Response::HTTP_OK);
+        } catch (Exception $exception) {
+            return $this->jsonError(null, [$exception->getMessage()]);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    final public function checkCNPJ(Request $request): JsonResponse
+    {
+        try {
+            return !User::whereCnpj($request->cnpj)->exists() ? $this->jsonSuccess(null) :
+                $this->jsonError('Esse CNPJ já está em uso.', null, Response::HTTP_OK);
+        } catch (Exception $exception) {
+            return $this->jsonError(null, [$exception->getMessage()]);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    final public function checkPhone(Request $request): JsonResponse
+    {
+        try {
+            return !User::wherePhone($request->phone)->exists() ? $this->jsonSuccess(null) :
+                $this->jsonError('Esse celular já está em uso.', null, Response::HTTP_OK);
         } catch (Exception $exception) {
             return $this->jsonError(null, [$exception->getMessage()]);
         }

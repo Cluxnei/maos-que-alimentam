@@ -7,6 +7,11 @@ keys = {
         step: 'registrationStep',
         name: 'registrationName',
         cnpj: 'registrationCnpj',
-        phone: 'registrationPhone'
+        phone: 'registrationPhone',
+        email: 'registrationEmail',
+        password: 'registrationPassword',
+        cep: 'registrationCep',
+        logradouro: 'registrationLogradouro',
+        city: 'registrationCity'
     }
 };

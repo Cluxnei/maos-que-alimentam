@@ -22,6 +22,8 @@ export const getRegistration = async () => {
         getData(keys.registration.cep),
         getData(keys.registration.logradouro),
         getData(keys.registration.city),
+        getData(keys.registration.email),
+        getData(keys.registration.password),
     ]);
     return {
         name: registration[0],
@@ -31,5 +33,7 @@ export const getRegistration = async () => {
         cep: registration[4],
         logradouro: registration[5],
         city: registration[6],
+        email: registration[7],
+        password: registration[8],
     };
 };
