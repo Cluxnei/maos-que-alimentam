@@ -21,20 +21,16 @@ class UserController extends Controller
      */
     final public function login(Request $request): JsonResponse
     {
-        try {
-            $credentials = $request->only(['email', 'password']);
-            if (!Auth::attempt($credentials)) {
-                return response()->json([
-                    'success' => false,
-                    'result' => 'Login inválido',
-                ], Response::HTTP_OK);
-            }
-            $user = Auth::user();
-            $token = $user->createToken('AuthToken');
-            return $this->jsonSuccess(compact('user', 'token'));
-        } catch (Exception $exception) {
-            return $this->jsonError(null, [$exception->getMessage()]);
+        $credentials = $request->only(['email', 'password']);
+        if (!Auth::attempt($credentials)) {
+            return response()->json([
+                'success' => false,
+                'result' => 'Login inválido',
+            ], Response::HTTP_OK);
         }
+        $user = Auth::user();
+        $token = $user->createToken('AuthToken');
+        return $this->jsonSuccess(compact('user', 'token'));
     }
 
     /**
@@ -43,26 +39,22 @@ class UserController extends Controller
      */
     final public function forgotPassword(Request $request): JsonResponse
     {
-        try {
-            $user = User::query()->where('email', '=', $request->email)->get();
-            if ($user->count() === 0) {
-                return response()->json([
-                    'success' => false,
-                    'result' => 'Email inválido',
-                ], Response::HTTP_OK);
-            }
-            $newPassword = Str::random(10);
-            $updated = $user->first()->update([
-                'password' => Hash::make($newPassword)
-            ]);
-            if (!$updated) {
-                return $this->jsonError(null, ['Erro ao atualizar senha']);
-            }
-            event(new ForgotPassword($user->first(), $newPassword));
-            return $this->jsonSuccess(null);
-        } catch (Exception $exception) {
-            return $this->jsonError(null, [$exception->getMessage()]);
+        $user = User::query()->where('email', '=', $request->email)->get();
+        if ($user->count() === 0) {
+            return response()->json([
+                'success' => false,
+                'result' => 'Email inválido',
+            ], Response::HTTP_OK);
         }
+        $newPassword = Str::random(10);
+        $updated = $user->first()->update([
+            'password' => Hash::make($newPassword)
+        ]);
+        if (!$updated) {
+            return $this->jsonError(null, ['Erro ao atualizar senha']);
+        }
+        event(new ForgotPassword($user->first(), $newPassword));
+        return $this->jsonSuccess(null);
     }
 
     /**
@@ -71,12 +63,8 @@ class UserController extends Controller
      */
     final public function checkEmail(Request $request): JsonResponse
     {
-        try {
-            return !User::whereEmail($request->email)->exists() ? $this->jsonSuccess(null) :
-                $this->jsonError('Esse e-mail já está em uso.', null, Response::HTTP_OK);
-        } catch (Exception $exception) {
-            return $this->jsonError(null, [$exception->getMessage()]);
-        }
+        return !User::whereEmail($request->email)->exists() ? $this->jsonSuccess(null) :
+            $this->jsonError('Esse e-mail já está em uso.', null, Response::HTTP_OK);
     }
 
     /**
@@ -85,12 +73,8 @@ class UserController extends Controller
      */
     final public function checkCNPJ(Request $request): JsonResponse
     {
-        try {
-            return !User::whereCnpj($request->cnpj)->exists() ? $this->jsonSuccess(null) :
-                $this->jsonError('Esse CNPJ já está em uso.', null, Response::HTTP_OK);
-        } catch (Exception $exception) {
-            return $this->jsonError(null, [$exception->getMessage()]);
-        }
+        return !User::whereCnpj($request->cnpj)->exists() ? $this->jsonSuccess(null) :
+            $this->jsonError('Esse CNPJ já está em uso.', null, Response::HTTP_OK);
     }
 
     /**
@@ -99,11 +83,7 @@ class UserController extends Controller
      */
     final public function checkPhone(Request $request): JsonResponse
     {
-        try {
-            return !User::wherePhone($request->phone)->exists() ? $this->jsonSuccess(null) :
-                $this->jsonError('Esse celular já está em uso.', null, Response::HTTP_OK);
-        } catch (Exception $exception) {
-            return $this->jsonError(null, [$exception->getMessage()]);
-        }
+        return !User::wherePhone($request->phone)->exists() ? $this->jsonSuccess(null) :
+            $this->jsonError('Esse celular já está em uso.', null, Response::HTTP_OK);
     }
 }
