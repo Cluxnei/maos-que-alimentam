@@ -9,7 +9,7 @@ import logo from '../../assets/logo.png';
 import background from '../../assets/background.png';
 import {delay, getRegistration} from "../../constants/Utils";
 import axios from '../../api/index';
-import Routes from "../../api/Routes";
+import routes from "../../api/Routes";
 
 export default ({navigation}) => {
     //#region states
@@ -23,18 +23,46 @@ export default ({navigation}) => {
     const [widthAnimation] = useState(new Animated.Value(20));
     //#endregion
     //#region handlers
-    const handleEmailSubmitEditing = async () => {
+    const registerAccount = async () => {
+        const registration = await getRegistration();
         try {
-            if (!validEmail(email)) {
-                return setMessage('Email inválido');
+            const {data: {success, result: {user}}} = await axios.post(routes.register, registration);
+            if (success) {
+                return user;
             }
-            setIsPerformingAnyAction(true);
-            const {data: {result}} = await axios.post(Routes.checkEmail, {email});
-            setMessage(result);
+            return false;
         } catch (e) {
-            setMessage('Erro ao validar email, tente novamente.');
-            setEmail('');
+            return false;
         }
+    };
+    const loginRegisteredUser = async (user) => await Promise.all([
+        storeData(keys.user, user),
+        storeData(keys.token, user.token)
+    ]);
+    const checkEmail = async (email) => {
+        try {
+            const {data: {result, success}} = await axios.post(routes.checkEmail, {email});
+            return {success, result};
+        } catch (e) {
+            return {error: true};
+        }
+    };
+    const handleEmailSubmitEditing = async () => {
+        if (!validEmail((email || ''))) {
+            return setMessage('Email inválido');
+        }
+        setIsPerformingAnyAction(true);
+        startAnimation();
+        const validatedEmail = await checkEmail(email);
+        if (validatedEmail.error) {
+            setIsPerformingAnyAction(false);
+            return setMessage('Erro ao verificar e-mail. Verifique sua conexão.');
+        }
+        if (!validatedEmail.success) {
+            setIsPerformingAnyAction(false);
+            return setMessage(validatedEmail.result);
+        }
+        await resetAnimation();
         setIsPerformingAnyAction(false);
         if (passwordField) {
             passwordField.focus();
@@ -52,26 +80,43 @@ export default ({navigation}) => {
     const handleConfirmPasswordSubmitEditing = () => {
         if (!validPassword(confirmPassword)) {
             setConfirmPassword('');
-            return setMessage('Senhas não correspondem');
+            return setMessage('Senha inválida');
         }
-        if (confirmPasswordField) {
-            confirmPasswordField.focus();
-        }
+        handleNextPress().done();
     };
     const handleNextPress = async () => {
-        setIsPerformingAnyAction(true);
         if (!validPassword(password) || !validPassword(confirmPassword) || !validEmail(email)) {
-            setIsPerformingAnyAction(false);
             return setMessage('Preencha corretamente os campos');
         }
+        if (password !== confirmPassword) {
+            if (confirmPasswordField) {
+                confirmPasswordField.focus();
+            }
+            return setMessage('Senhas não correspondem');
+        }
         startAnimation();
+        setIsPerformingAnyAction(true);
+        const validatedEmail = await checkEmail(email);
+        if (validatedEmail.error) {
+            setIsPerformingAnyAction(false);
+            return setMessage('Erro ao verificar e-mail. Verifique sua conexão.');
+        }
+        if (!validatedEmail.success) {
+            setIsPerformingAnyAction(false);
+            return setMessage(validatedEmail.result);
+        }
         await Promise.all([
             storeData(keys.registration.email, email),
             storeData(keys.registration.password, password)
         ]);
+        const user = await registerAccount();
         await resetAnimation();
         setIsPerformingAnyAction(false);
-        navigation.navigate('AuthInformation');
+        if (!user) {
+            return setMessage('Erro ao criar sua conta, tente novamente mais tarde.');
+        }
+        await loginRegisteredUser(user);
+        navigation.navigate('Home', {reset: true});
     };
     //#endregion
     //#region animation methods

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Events\ForgotPassword;
+use App\Events\UserRegistered;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\User\Register;
 use App\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -55,6 +57,21 @@ class UserController extends Controller
         }
         event(new ForgotPassword($user->first(), $newPassword));
         return $this->jsonSuccess(null);
+    }
+
+    /**
+     * @param Register $request
+     * @return JsonResponse
+     */
+    final public function register(Register $request): JsonResponse
+    {
+        $password = Hash::make($request->password);
+        $data = $request->merge(compact('password'))
+            ->only(['name', 'email', 'cnpj', 'phone', 'zipcode', 'street', 'city', 'password']);
+        $user = User::create($data);
+        $user->setAttribute('token', $user->createToken('AuthToken'));
+        event(new UserRegistered($user));
+        return $this->jsonSuccess(compact('user'), Response::HTTP_CREATED);
     }
 
     /**

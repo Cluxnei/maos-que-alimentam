@@ -52,17 +52,16 @@ export default ({navigation}) => {
         }
         setIsPerformingAnyAction(true);
         startAnimation();
-        checkCnpj(rawCnpj).then(async ({success, result, error}) => {
-            await resetAnimation();
-            if (error) {
-                setIsPerformingAnyAction(false);
-                return setMessage('Erro ao verificar CNPJ. Verifique sua conexão.');
-            }
-            if (!success) {
-                setIsPerformingAnyAction(false);
-                return setMessage(result);
-            }
-        });
+        const validCnpj = await checkCnpj(rawCnpj);
+        await resetAnimation();
+        if (validCnpj.error) {
+            setIsPerformingAnyAction(false);
+            return setMessage('Erro ao verificar CNPJ. Verifique sua conexão.');
+        }
+        if (!validCnpj.success) {
+            setIsPerformingAnyAction(false);
+            return setMessage(validCnpj.result);
+        }
         setIsPerformingAnyAction(false);
         if (phoneField) {
             phoneField.getElement().focus();

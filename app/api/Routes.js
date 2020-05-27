@@ -6,4 +6,5 @@ export default {
     checkEmail: '/check/email',
     checkCnpj: '/check/cnpj',
     checkPhone: '/check/phone',
+    register: '/register'
 };
