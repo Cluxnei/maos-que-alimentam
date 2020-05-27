@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::name('api.')->group(static function () {
     Route::post('/login', 'Api\UserController@login')->name('login');
-    Route::post('/register', 'Api\UserController@register')->name('register');
+    Route::post('/register', 'Api\UserController@register')->name('api.register');
     Route::post('/forgot-password', 'Api\UserController@forgotPassword')->name('forgotPassword');
     Route::name('check.')->prefix('/check')->group(static function () {
         Route::post('/email', 'Api\UserController@checkEmail')->name('email');
