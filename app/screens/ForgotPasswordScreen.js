@@ -3,7 +3,6 @@ import {Animated} from 'react-native';
 import Loading from '../components/Loading';
 import * as S from '../styles/ForgotPassword';
 import {validEmail} from "../constants/Validate";
-import watermark from '../assets/watermark.png';
 import logo from '../assets/logo.png';
 import background from '../assets/background.png';
 import {delay} from "../constants/Utils";
@@ -77,7 +76,7 @@ export default ({route, navigation}) => {
         <S.Container>
             <S.Background source={background}>
                 <S.scroll>
-                    <S.Header resizeMode="stretch" source={watermark}/>
+                    <S.Header />
                     <S.body>
                         <S.Logo source={logo}/>
                         <S.DataContainer>

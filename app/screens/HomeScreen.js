@@ -1,14 +1,19 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useLayoutEffect} from 'react';
+import {CommonActions} from "@react-navigation/native";
 import {resetNavigation} from "../constants/Utils";
 import * as S from "../styles/Home";
-import {storeData} from "../storage";
+import HomeLogoutButton from "../components/HomeLogoutButton";
+import {getData} from "../storage";
 import {keys} from "../storage/Keys";
 
 export default ({navigation, route}) => {
-    const handleLogoutButtonPress = async () => {
-        await Promise.all([storeData(keys.token, false), storeData(keys.user, false)]);
-        return navigation.navigate('Login');
-    };
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <HomeLogoutButton navigation={navigation} />
+            ),
+        });
+    }, [navigation]);
     useEffect(() => {
         let mount = true;
         const {reset} = route.params;
@@ -17,15 +22,30 @@ export default ({navigation, route}) => {
         }
         return () => mount = false;
     }, []);
+    useEffect(() => {
+        let mount = true;
+        (async () => {
+            if (mount && !await getData(keys.user)) {
+                navigation.dispatch(
+                    CommonActions.navigate({
+                        name: 'Login',
+                        params: {},
+                    })
+                );
+            }
+        })();
+        return () => mount = false;
+    }, [navigation]);
     return (
         <S.Container>
             <S.Background>
+                <S.Header/>
                 <S.Doador>
-                    <S.Doar />
+                    <S.Doar/>
                     <S.Text>Doar</S.Text>
                 </S.Doador>
                 <S.Receptor>
-                    <S.Receber />
+                    <S.Receber/>
                     <S.Text>Receber</S.Text>
                 </S.Receptor>
             </S.Background>

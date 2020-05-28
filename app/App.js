@@ -9,6 +9,7 @@ import Colors from "./constants/Colors";
 import BasicInformationScreen from "./screens/Registration/BasicInformationScreen";
 import LocationInformationScreen from "./screens/Registration/LocationInformationScreen";
 import AuthInformationScreen from "./screens/Registration/AuthInformationScreen";
+import HomeLogoutButton from './components/HomeLogoutButton';
 
 const Stack = createStackNavigator();
 
@@ -17,7 +18,13 @@ const Options = {
         header: () => null
     },
     HomeScreen: {
-        header: () => null
+        title: '',
+        headerStyle: {
+            height: 70,
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
+        },
     },
     ForgotPassword: {
         title: 'RECUPERAR SENHA',
@@ -31,13 +38,16 @@ const Options = {
     },
     Registration: {
         BasicInformation: {
-            title: 'DADOS BÁSICOS'
+            title: 'DADOS BÁSICOS',
+            headerTintColor: Colors.secondColor
         },
         LocationInformation: {
-            title: 'DADOS DE LOCALIZAÇÃO'
+            title: 'DADOS DE LOCALIZAÇÃO',
+            headerTintColor: Colors.secondColor
         },
         AuthInformation: {
-            title: 'DADOS DE AUTENTICAÇÃO'
+            title: 'DADOS DE AUTENTICAÇÃO',
+            headerTintColor: Colors.secondColor
         }
     }
 };

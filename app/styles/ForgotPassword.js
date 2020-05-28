@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 import Colors from '../constants/Colors';
 import { EvilIcons } from '@expo/vector-icons';
 import {Dimensions, Animated, KeyboardAvoidingView} from "react-native";
-
+import watermark from '../assets/watermark.png';
 const {primaryColor, secondColor, selectionColor} = Colors;
 const {width} = Dimensions.get('screen');
 
@@ -19,7 +19,10 @@ export const scroll = styled(KeyboardAvoidingView).attrs({
     behavior: 'position',
     keyboardVerticalOffset: -64
 })``;
-export const Header = styled.Image`
+export const Header = styled.Image.attrs({
+    source: watermark,
+    resizeMode: "stretch"
+})`
   width: 110%;
   height: 50px;
   margin-top: -20px;
