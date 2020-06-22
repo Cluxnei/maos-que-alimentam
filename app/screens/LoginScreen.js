@@ -4,13 +4,19 @@ import Loading from '../components/Loading';
 import * as S from '../styles/Login';
 import {getData, storeData} from "../storage";
 import {keys} from "../storage/Keys";
-import {validEmail, validPassword, validUserToken} from "../constants/Validate";
+import {
+    isEmpty,
+    isNotEmpty,
+    validateErrorsMessages,
+    validEmail,
+    validUserToken
+} from '../constants/Validate';
 import watermark from '../assets/watermark.png';
 import logo from '../assets/logo.png';
 import background from '../assets/background.png';
-import {delay} from "../constants/Utils";
-import routes from "../api/Routes";
-import axios from "../api/index";
+import {delay} from '../constants/Utils';
+import routes from '../api/Routes';
+import axios from '../api/index';
 
 export default (props) => {
     /**
@@ -52,13 +58,15 @@ export default (props) => {
     };
     /**
      * Attempt login request with credentials
-     * @param email
-     * @param password
+     * @param {string} email
+     * @param {string} password
      * @returns {Promise<boolean|{result, success}>}
      */
     const attemptLogin = async (email, password) => {
         try {
-            const {data: {success, result}} = await axios.post(routes.login, {email, password});
+            const {
+                data: {success, result}
+            } = await axios.post(routes.login, {email, password});
             return {success, result};
         } catch (e) {
             return false;
@@ -71,16 +79,20 @@ export default (props) => {
     const attemptCredentials = async() => {
         setIsPerformingAnyAction(true);
         setMessage('');
-        if (!validEmail(email) || !validPassword(password)) {
+        if (!validEmail(email)) {
             setIsPerformingAnyAction(false);
-            return setMessage('Ops... preencha corretamente os campos');
+            return setMessage(validateErrorsMessages.email);
+        }
+        if (isEmpty(password)) {
+            setIsPerformingAnyAction(false);
+            return setMessage(validateErrorsMessages.password.empty);
         }
         startAnimation();
         const loginResponse = await attemptLogin(email.trim(), password.trim());
         await resetAnimation();
         setIsPerformingAnyAction(false);
         if (!loginResponse) {
-            return setMessage('Ops... erro ao efetuar login, verifique sua conexão.');
+            return setMessage(validateErrorsMessages.login.fail);
         }
         const {success, result} = loginResponse;
         if (!success) {
@@ -88,26 +100,56 @@ export default (props) => {
         }
         const {user, token: accessToken} = result;
         if (!validUserToken(user, accessToken)) {
-            return setMessage('Ops... faça login novamente por favor.');
+            return setMessage(validateErrorsMessages.userAndToken);
         }
         await Promise.all([storeData(keys.token, accessToken), storeData(keys.user, user)]);
         await loginUser();
     };
+
+    /**
+     * Check if user and token is valid and navigate to home if valid
+     * with reset parameter
+     * @returns {Promise<void|WindowClient|null>}
+     */
     const loginUser = async () => {
         const [token, user] = await Promise.all([getData(keys.token), getData(keys.user)]);
         if (validUserToken(user, token)) {
             return props.navigation.navigate('Home', {reset: true});
         }
     };
-    const init = () => {
-        setIsPerformingAnyAction(true);
-        loginUser().then(() => setIsPerformingAnyAction(false));
+    /**
+     * Login user if previous logged in
+     * @returns {function(): void}
+     */
+    const loginPreviousLoggedUser = () => {
+        let mounted = true;
+        if (mounted) {
+            setIsPerformingAnyAction(true);
+            loginUser().then(() =>
+                setIsPerformingAnyAction(false)
+            );
+        }
+        return () => {
+            mounted = false;
+        };
     };
+    /**
+     * Navigate to forgot password screen when button press
+     * @returns {Promise<WindowClient | null>}
+     */
     const handleForgotPasswordPress = () => props.navigation.navigate('ForgotPassword', {email});
+    /**
+     * Navigate to register screen when button press
+     * @returns {Promise<WindowClient | null>}
+     */
     const handleSingUpPress = () => props.navigation.navigate('BasicInformation');
-    useEffect(init, []);
+    // Effects
+    useEffect(loginPreviousLoggedUser, []);
+    /**
+     * Clear message when email or password changes
+     */
     useEffect(() => {
-        if (message !== '') {
+        if (isNotEmpty(message)) {
             setMessage('');
         }
     }, [email, password]);
@@ -137,8 +179,8 @@ export default (props) => {
                                 </S.InputCircle>
                                 <S.InputField
                                     onChangeText={setEmail} autoCompleteType="email"
-                                    keyboardType="email-address" value={email}
-                                    placeholder={isPerformingAnyAction ? '' : 'E-mail'}
+                                    autoCapitalize="none" keyboardType="email-address"
+                                    value={email} placeholder={isPerformingAnyAction ? '' : 'E-mail'}
                                     returnKeyType="next" editable={!isPerformingAnyAction}
                                     textContentType="emailAddress" onSubmitEditing={handleEmailSubmitEditing}
                                     style={{color: isPerformingAnyAction ? 'transparent' : 'white'}}
@@ -157,7 +199,7 @@ export default (props) => {
                                 </S.InputCircle>
                                 <S.InputField
                                     onChangeText={setPassword} autoCompleteType="password"
-                                    clearTextOnFocus value={password}
+                                    clearTextOnFocus value={password} autoCapitalize="none"
                                     placeholder={isPerformingAnyAction ? '' : 'Senha'}
                                     onSubmitEditing={attemptCredentials} returnKeyType="done"
                                     secureTextEntry selectTextOnFocus textContentType="password"

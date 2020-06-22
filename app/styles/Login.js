@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 import Colors from '../constants/Colors';
 import { EvilIcons } from '@expo/vector-icons';
-import {Dimensions, Animated, KeyboardAvoidingView} from "react-native";
+import {Dimensions, Animated, KeyboardAvoidingView} from 'react-native';
 
 const {primaryColor, secondColor, selectionColor} = Colors;
 const {width} = Dimensions.get('screen');
@@ -9,11 +9,12 @@ const {width} = Dimensions.get('screen');
 export const Container = styled.View`
   flex: 1;
 `;
-export const Background = styled.ImageBackground`
+export const Background = styled.ImageBackground.attrs({
+    resizeMode: 'cover',
+})`
   width: 100%;
   height: 100%;
   flex: 1;
-  resize-mode: cover;
 `;
 export const scroll = styled(KeyboardAvoidingView).attrs({
     behavior: 'position',
@@ -27,8 +28,10 @@ export const body = styled.View`
   margin: 0 20px;
   align-items: center;
 `;
-export const Logo = styled.Image`
-  resize-mode: contain;
+export const Logo = styled.Image.attrs({
+    resizeMode: 'contain',
+})
+`
   width: 90%;
 `;
 export const DataContainer = styled.View``;
@@ -116,5 +119,5 @@ export const MessageText = styled.Text`
   color: ${primaryColor};
   font-size: 16px;
   font-weight: bold;
-  text-align: center;
+  text-align: left;
 `;
