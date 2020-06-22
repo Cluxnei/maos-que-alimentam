@@ -13,28 +13,36 @@ import routes from "../api/Routes";
 import axios from "../api/index";
 
 export default (props) => {
-    //#region states
+    /**
+     * Local states
+     */
     const [isPerformingAnyAction, setIsPerformingAnyAction] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState(undefined);
     const [passwordField, setPasswordField] = useState(undefined);
     const [widthAnimation] = useState(new Animated.Value(20));
-    //#endregion
-    //#region handlers
+    /**
+     * When email keyboard submit editing
+     */
     const handleEmailSubmitEditing = () => {
         if (passwordField) {
             passwordField.focus();
         }
     };
-    //#endregion
-    //#region animation methods
+    /**
+     * Start width animation
+     */
     const startAnimation = () => {
         Animated.timing(widthAnimation, {
             toValue: 100,
             duration: 500,
         }).start();
     };
+    /**
+     * Revert width animation
+     * @returns {Promise<void>}
+     */
     const resetAnimation = async () => {
         Animated.timing(widthAnimation, {
             toValue: 20,
@@ -42,8 +50,12 @@ export default (props) => {
         }).start();
         await delay(400);
     };
-    //#endregion
-    //#region methods
+    /**
+     * Attempt login request with credentials
+     * @param email
+     * @param password
+     * @returns {Promise<boolean|{result, success}>}
+     */
     const attemptLogin = async (email, password) => {
         try {
             const {data: {success, result}} = await axios.post(routes.login, {email, password});
@@ -52,6 +64,10 @@ export default (props) => {
             return false;
         }
     };
+    /**
+     * Attempt and validate credentials
+     * @returns {Promise<void>}
+     */
     const attemptCredentials = async() => {
         setIsPerformingAnyAction(true);
         setMessage('');
@@ -89,14 +105,12 @@ export default (props) => {
     };
     const handleForgotPasswordPress = () => props.navigation.navigate('ForgotPassword', {email});
     const handleSingUpPress = () => props.navigation.navigate('BasicInformation');
-    //#endregion
     useEffect(init, []);
     useEffect(() => {
         if (message !== '') {
             setMessage('');
         }
     }, [email, password]);
-    //#region render
     return (
         <S.Container>
             <S.Background source={background}>
@@ -183,5 +197,4 @@ export default (props) => {
             </S.Background>
         </S.Container>
     );
-    //#endregion
 };
