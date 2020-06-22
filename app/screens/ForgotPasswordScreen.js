@@ -2,32 +2,42 @@ import React, {useEffect, useState} from 'react';
 import {Animated} from 'react-native';
 import Loading from '../components/Loading';
 import * as S from '../styles/ForgotPassword';
-import {validEmail} from "../constants/Validate";
+import {isNotEmpty, validateErrorsMessages, validEmail} from '../constants/Validate';
 import logo from '../assets/logo.png';
 import background from '../assets/background.png';
-import {delay} from "../constants/Utils";
-import routes from "../api/Routes";
-import axios from "../api/index";
+import {delay} from '../constants/Utils';
+import routes from '../api/Routes';
+import axios from '../api/index';
+import messages from '../constants/Messages';
 
 export default ({route, navigation}) => {
-    //#region states
+    /**
+     * States
+     */
     const [isPerformingAnyAction, setIsPerformingAnyAction] = useState(false);
     const [email, setEmail] = useState(route.params.email || '');
     const [message, setMessage] = useState(undefined);
     const [widthAnimation] = useState(new Animated.Value(20));
-    //#endregion
-    //#region handlers
+    /**
+     * Attempt credentials when email keyboard submit editing
+     * @returns {Promise<void>}
+     */
     const handleEmailSubmitEditing = async () => {
         await attemptCredentials();
     };
-    //#endregion
-    //#region animation methods
+    /**
+     * Start width animation
+     */
     const startAnimation = () => {
         Animated.timing(widthAnimation, {
             toValue: 100,
             duration: 500,
         }).start();
     };
+    /**
+     * Revert width animation
+     * @returns {Promise<void>}
+     */
     const resetAnimation = async () => {
         Animated.timing(widthAnimation, {
             toValue: 20,
@@ -35,8 +45,11 @@ export default ({route, navigation}) => {
         }).start();
         await delay(400);
     };
-    //#endregion
-    //#region methods
+    /**
+     * Attempt reset password request
+     * @param {string} email
+     * @returns {Promise<boolean|{result, success}>}
+     */
     const attemptForgotPassword = async (email) => {
         try {
             const {data: {success, result}} = await axios.post(routes.forgotPassword, {email});
@@ -45,29 +58,40 @@ export default ({route, navigation}) => {
             return false;
         }
     };
+    /**
+     * Attempt and validade credentials
+     * @returns {Promise<void>}
+     */
     const attemptCredentials = async() => {
         setIsPerformingAnyAction(true);
         setMessage('');
         if (!validEmail(email)) {
             setIsPerformingAnyAction(false);
-            return setMessage('Ops... preencha corretamente os campos');
+            return setMessage(validateErrorsMessages.email);
         }
         startAnimation();
         const forgotPasswordResponse = await attemptForgotPassword(email.trim());
         await resetAnimation();
         setIsPerformingAnyAction(false);
         if (!forgotPasswordResponse) {
-            return setMessage('Ops... verifique sua conexão.');
+            return setMessage(validateErrorsMessages.checkConnection);
         }
         const {success, result} = forgotPasswordResponse;
         if (!success) {
             return setMessage(result);
         }
-        return setMessage('Enviamos uma nova senha em seu email');
+        return setMessage(messages.passwordRecovered);
     };
+    /**
+     * Navigate to register screen when button press
+     * @returns {Promise<WindowClient | null>}
+     */
     const handleSingUpPress = () => navigation.navigate('BasicInformation');
+    /**
+     * Clear message when email changes
+     */
     useEffect(() => {
-        if (message !== '') {
+        if (isNotEmpty(message)) {
             setMessage('');
         }
     }, [email]);

@@ -15,7 +15,7 @@ export const validateErrorsMessages = {
         rules: passwordRules,
         empty: 'Ops... sua senha está vazia.'
     },
-
+    checkConnection: 'Ops... verifique sua conexão',
     login: {
         fail: 'Ops... erro ao efetuar login, verifique sua conexão.',
     },
