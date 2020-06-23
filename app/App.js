@@ -9,13 +9,13 @@ import Colors from "./constants/Colors";
 import BasicInformationScreen from "./screens/Registration/BasicInformationScreen";
 import LocationInformationScreen from "./screens/Registration/LocationInformationScreen";
 import AuthInformationScreen from "./screens/Registration/AuthInformationScreen";
-import HomeLogoutButton from './components/HomeLogoutButton';
 
 const Stack = createStackNavigator();
 
 const Options = {
     LoginScreen: {
-        header: () => null
+        header: () => null,
+        title: 'ENTRAR'
     },
     HomeScreen: {
         title: '',

@@ -7,6 +7,10 @@ import {storeData} from "../storage";
 import {keys} from "../storage/Keys";
 
 export default ({navigation}) => {
+    /**
+     * Logout user when button press
+     * @returns {Promise<void>}
+     */
     const handleLogoutButtonPress = async () => {
         await Promise.all([storeData(keys.token, false), storeData(keys.user, false)]);
         navigation.dispatch(

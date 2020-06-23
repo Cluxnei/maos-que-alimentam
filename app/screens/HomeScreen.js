@@ -1,10 +1,11 @@
 import React, {useEffect, useLayoutEffect} from 'react';
-import {CommonActions} from "@react-navigation/native";
-import {resetNavigation} from "../constants/Utils";
-import * as S from "../styles/Home";
-import HomeLogoutButton from "../components/HomeLogoutButton";
-import {getData} from "../storage";
-import {keys} from "../storage/Keys";
+import {CommonActions} from '@react-navigation/native';
+import {resetNavigation} from '../constants/Utils';
+import * as S from '../styles/Home';
+import HomeLogoutButton from '../components/HomeLogoutButton';
+import {getData} from '../storage';
+import {keys} from '../storage/Keys';
+import {isEmpty} from "../constants/Validate";
 
 export default ({navigation, route}) => {
     useLayoutEffect(() => {
@@ -18,14 +19,17 @@ export default ({navigation, route}) => {
         let mount = true;
         const {reset} = route.params;
         if (reset && mount) {
-            return resetNavigation({navigation});
+            return resetNavigation(navigation);
         }
-        return () => mount = false;
+        return () => {
+            mount = false;
+        };
     }, []);
+    const getUser = async () => await getData(keys.user);
     useEffect(() => {
         let mount = true;
-        (async () => {
-            if (mount && !await getData(keys.user)) {
+        getUser().then((user) => {
+            if (mount && isEmpty(user)) {
                 navigation.dispatch(
                     CommonActions.navigate({
                         name: 'Login',
@@ -33,8 +37,10 @@ export default ({navigation, route}) => {
                     })
                 );
             }
-        })();
-        return () => mount = false;
+        });
+        return () => {
+            mount = false;
+        }
     }, [navigation]);
     return (
         <S.Container>

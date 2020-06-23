@@ -104,6 +104,7 @@ export default ({navigation}) => {
             storeData(keys.registration.street, street),
             storeData(keys.registration.city, city)
         ]);
+        await delay(400);
         await resetAnimation();
         setIsPerformingAnyAction(false);
         navigation.navigate('AuthInformation');

@@ -3,7 +3,7 @@ import {getData} from "../storage";
 import {keys} from "../storage/Keys";
 
 export const delay = (ms) => new Promise((res) => setTimeout(res, ms));
-export const resetNavigation = ({navigation}) => navigation.dispatch(
+export const resetNavigation = (navigation) => navigation.dispatch(
     (state) => {
         const routes = state.routes.filter(({name}) => name !== 'Login');
         return CommonActions.reset({

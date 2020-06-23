@@ -15,7 +15,7 @@ export default ({route, navigation}) => {
      * States
      */
     const [isPerformingAnyAction, setIsPerformingAnyAction] = useState(false);
-    const [email, setEmail] = useState(route.params.email || '');
+    const [email, setEmail] = useState(route.params.email.trim() || '');
     const [message, setMessage] = useState(undefined);
     const [widthAnimation] = useState(new Animated.Value(20));
     /**
@@ -65,9 +65,9 @@ export default ({route, navigation}) => {
     const attemptCredentials = async() => {
         setIsPerformingAnyAction(true);
         setMessage('');
-        if (!validEmail(email)) {
+        if (!validEmail(email.trim())) {
             setIsPerformingAnyAction(false);
-            return setMessage(validateErrorsMessages.email);
+            return setMessage(validateErrorsMessages.email.invalid);
         }
         startAnimation();
         const forgotPasswordResponse = await attemptForgotPassword(email.trim());
@@ -156,5 +156,4 @@ export default ({route, navigation}) => {
             </S.Background>
         </S.Container>
     );
-    //#endregion
 };

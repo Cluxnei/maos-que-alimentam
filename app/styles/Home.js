@@ -12,12 +12,12 @@ export const Container = styled.View`
   flex: 1;
 `;
 export const Background = styled.ImageBackground.attrs({
-    source: background
+    source: background,
+    resizeMode: 'cover',
 })`
   width: 100%;
   height: 100%;
   flex: 1;
-  resize-mode: cover;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -28,18 +28,19 @@ export const Header = styled.Image.attrs({
 })`
   width: 110%;
   height: 100px;
-  margin-top: -80px;
+  margin-top: -140px;
+  margin-bottom: 20px;
   transform: rotateZ(3deg);
 `;
 export const Doador = styled.TouchableOpacity`
-  margin: 15px 0;
+  margin-top: 25px;
 `;
 export const Doar = styled.Image.attrs({
-    source: doar
+    source: doar,
+    resizeMode: 'contain',
 })`
   width: ${buttonSize}px;
   height: ${buttonSize}px;
-  resize-mode: contain;
 `;
 export const Text = styled.Text`
   color: white;
@@ -50,9 +51,9 @@ export const Receptor = styled(Doador)`
 
 `;
 export const Receber = styled.Image.attrs({
-    source: receber
+    source: receber,
+    resizeMode: 'contain',
 })`
   width: ${buttonSize}px;
   height: ${buttonSize}px;
-  resize-mode: contain;
 `;

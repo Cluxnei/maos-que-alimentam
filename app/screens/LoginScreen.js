@@ -125,9 +125,11 @@ export default (props) => {
         let mounted = true;
         if (mounted) {
             setIsPerformingAnyAction(true);
-            loginUser().then(() =>
-                setIsPerformingAnyAction(false)
-            );
+            loginUser().then(() => {
+                if (mounted) {
+                    setIsPerformingAnyAction(false)
+                }
+            });
         }
         return () => {
             mounted = false;

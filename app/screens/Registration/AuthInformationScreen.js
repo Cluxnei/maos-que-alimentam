@@ -119,14 +119,14 @@ export default ({navigation}) => {
      * @returns {Promise<void>}
      */
     const handleNextPress = async () => {
+        if (!validEmail(email)) {
+            return setMessage(validateErrorsMessages.email.invalid);
+        }
         if (!validPassword(password)) {
             return setMessage(validateErrorsMessages.password.rules);
         }
         if (!validPassword(confirmPassword)) {
             return setMessage(validateErrorsMessages.password.rules);
-        }
-        if (!validEmail(email)) {
-            return setMessage(validateErrorsMessages.email.invalid);
         }
         if (password !== confirmPassword) {
             if (confirmPasswordField) {
@@ -150,6 +150,7 @@ export default ({navigation}) => {
             storeData(keys.registration.password, password)
         ]);
         const user = await registerAccount();
+        console.log(user);
         await resetAnimation();
         setIsPerformingAnyAction(false);
         if (!user) {

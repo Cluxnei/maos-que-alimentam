@@ -2,12 +2,7 @@
  * Password rules translated string
  * @type {string}
  */
-export const passwordRules = `
-    A senha deve conter no mínimo 8 caracteres contendo:
-    - Um digito
-    - Uma letra minúscula
-    - Uma letra maiúscula
-`;
+export const passwordRules = 'A senha deve conter no mínimo 8 caracteres';
 
 export const validateErrorsMessages = {
     email: {
@@ -63,6 +58,9 @@ export const isNotUndefined = (_) => !isUndefined(_);
  * @returns {boolean}
  */
 export const isEmpty = (_) => {
+    if (typeof _ === 'boolean') {
+        return true;
+    }
     if (_ === null || isUndefined(_)) {
         return true;
     }
@@ -110,17 +108,12 @@ export const validEmail = (email) => isNotEmpty(email) && (
  * - should contain at least one lower case
  * - should contain at least one upper case
  * - should contain at least 8 from the mentioned characters
- * @param {string} pass
+ * @param {string} password
  * @returns {boolean}
  */
-export const validPassword = (pass) => {
-    const password = pass.trim();
-    return password.length > 7 && (
-        (
-            new RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/)
-        ).test(password)
-    );
-};
+export const validPassword = (password) => (
+    password.trim().length > 7
+);
 /**
  * Check if phone is valid
  * @param {string} phone
