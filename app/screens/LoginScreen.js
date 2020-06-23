@@ -81,7 +81,7 @@ export default (props) => {
         setMessage('');
         if (!validEmail(email)) {
             setIsPerformingAnyAction(false);
-            return setMessage(validateErrorsMessages.email);
+            return setMessage(validateErrorsMessages.email.invalid);
         }
         if (isEmpty(password)) {
             setIsPerformingAnyAction(false);

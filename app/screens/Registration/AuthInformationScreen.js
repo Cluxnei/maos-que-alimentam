@@ -4,7 +4,7 @@ import Loading from '../../components/Loading';
 import * as S from '../../styles/Registration';
 import {storeData} from "../../storage";
 import {keys} from "../../storage/Keys";
-import {validEmail, validPassword} from "../../constants/Validate";
+import {isNotEmpty, validateErrorsMessages, validEmail, validPassword} from "../../constants/Validate";
 import logo from '../../assets/logo.png';
 import background from '../../assets/background.png';
 import {delay, getRegistration} from "../../constants/Utils";
@@ -12,7 +12,9 @@ import axios from '../../api/index';
 import routes from "../../api/Routes";
 
 export default ({navigation}) => {
-    //#region states
+    /**
+     * Local states
+     */
     const [isPerformingAnyAction, setIsPerformingAnyAction] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -21,8 +23,11 @@ export default ({navigation}) => {
     const [passwordField, setPasswordField] = useState(undefined);
     const [confirmPasswordField, setConfirmPasswordField] = useState(undefined);
     const [widthAnimation] = useState(new Animated.Value(20));
-    //#endregion
-    //#region handlers
+
+    /**
+     * Perform register account request
+     * @returns {Promise<boolean>}
+     */
     const registerAccount = async () => {
         const registration = await getRegistration();
         try {
@@ -35,10 +40,21 @@ export default ({navigation}) => {
             return false;
         }
     };
+    /**
+     * Save user and token to storage
+     * @param user
+     * @returns {Promise<boolean[]>}
+     */
     const loginRegisteredUser = async (user) => await Promise.all([
         storeData(keys.user, user),
         storeData(keys.token, user.token)
     ]);
+
+    /**
+     * Perform api request to check if email is already in use
+     * @param {string} email
+     * @returns {Promise<{error: boolean}|{result, success}>}
+     */
     const checkEmail = async (email) => {
         try {
             const {data: {result, success}} = await axios.post(routes.checkEmail, {email});
@@ -47,16 +63,21 @@ export default ({navigation}) => {
             return {error: true};
         }
     };
+
+    /**
+     * Validate email and focus on password
+     * @returns {Promise<void>}
+     */
     const handleEmailSubmitEditing = async () => {
         if (!validEmail((email || ''))) {
-            return setMessage('Email inválido');
+            return setMessage(validateErrorsMessages.email.invalid);
         }
         setIsPerformingAnyAction(true);
         startAnimation();
         const validatedEmail = await checkEmail(email);
         if (validatedEmail.error) {
             setIsPerformingAnyAction(false);
-            return setMessage('Erro ao verificar e-mail. Verifique sua conexão.');
+            return setMessage(validateErrorsMessages.email.error);
         }
         if (!validatedEmail.success) {
             setIsPerformingAnyAction(false);
@@ -68,38 +89,57 @@ export default ({navigation}) => {
             passwordField.focus();
         }
     };
+    /**
+     * Validate password and focus on confirm password when password keyboard submit editing
+     */
     const handlePasswordSubmitEditing = () => {
         if (!validPassword(password)) {
             setPassword('');
-            return setMessage('Senha inválida');
+            return setMessage(validateErrorsMessages.password.rules);
         }
         if (confirmPasswordField) {
             confirmPasswordField.focus();
         }
     };
-    const handleConfirmPasswordSubmitEditing = () => {
+    /**
+     * Validate confirmed password and handle next button press
+     * when confirm password keyboard submit editing
+     * @returns {Promise<void>}
+     */
+    const handleConfirmPasswordSubmitEditing = async () => {
         if (!validPassword(confirmPassword)) {
             setConfirmPassword('');
-            return setMessage('Senha inválida');
+            return setMessage(validateErrorsMessages.password.rules);
         }
-        handleNextPress().done();
+        await handleNextPress();
     };
+
+    /**
+     * Perform validations, save to storage and navigate to home screen
+     * @returns {Promise<void>}
+     */
     const handleNextPress = async () => {
-        if (!validPassword(password) || !validPassword(confirmPassword) || !validEmail(email)) {
-            return setMessage('Preencha corretamente os campos');
+        if (!validPassword(password)) {
+            return setMessage(validateErrorsMessages.password.rules);
+        }
+        if (!validPassword(confirmPassword)) {
+            return setMessage(validateErrorsMessages.password.rules);
+        }
+        if (!validEmail(email)) {
+            return setMessage(validateErrorsMessages.email.invalid);
         }
         if (password !== confirmPassword) {
             if (confirmPasswordField) {
                 confirmPasswordField.focus();
             }
-            return setMessage('Senhas não correspondem');
+            return setMessage(validateErrorsMessages.password.notMatch);
         }
         startAnimation();
         setIsPerformingAnyAction(true);
         const validatedEmail = await checkEmail(email);
         if (validatedEmail.error) {
             setIsPerformingAnyAction(false);
-            return setMessage('Erro ao verificar e-mail. Verifique sua conexão.');
+            return setMessage(validateErrorsMessages.email.error);
         }
         if (!validatedEmail.success) {
             setIsPerformingAnyAction(false);
@@ -113,19 +153,24 @@ export default ({navigation}) => {
         await resetAnimation();
         setIsPerformingAnyAction(false);
         if (!user) {
-            return setMessage('Erro ao criar sua conta, tente novamente mais tarde.');
+            return setMessage(validateErrorsMessages.accountRegistration);
         }
         await loginRegisteredUser(user);
         navigation.navigate('Home', {reset: true});
     };
-    //#endregion
-    //#region animation methods
+    /**
+     * Start width animation
+     */
     const startAnimation = () => {
         Animated.timing(widthAnimation, {
             toValue: 100,
             duration: 500,
         }).start();
     };
+    /**
+     * Revert width animation
+     * @returns {Promise<void>}
+     */
     const resetAnimation = async () => {
         Animated.timing(widthAnimation, {
             toValue: 20,
@@ -133,24 +178,28 @@ export default ({navigation}) => {
         }).start();
         await delay(400);
     };
-    //#endregion
-    //#region methods
 
-    const init = () => {
+    /**
+     * Get previous saved information from storage and fill on local state
+     */
+    const getPreviousInformationFromStorage = () => {
         setIsPerformingAnyAction(true);
         getRegistration().then(({email}) => {
             setEmail(email);
             setIsPerformingAnyAction(false);
         });
     };
-    //#endregion
-    useEffect(init, []);
+    // Effects
+    useEffect(getPreviousInformationFromStorage, []);
+    /**
+     * Clear message when fields changes
+     */
     useEffect(() => {
-        if (message !== '') {
+        if (isNotEmpty(message)) {
             setMessage('');
         }
     }, [email, password, confirmPassword]);
-    //#region render
+
     return (
         <S.Container>
             <S.Background source={background}>
@@ -176,7 +225,7 @@ export default ({navigation}) => {
                                 </S.InputCircle>
                                 <S.InputField
                                     onChangeText={setEmail} autoCompleteType="email"
-                                    keyboardType="email-address" value={email}
+                                    keyboardType="email-address" value={email} autoCapitalize="none"
                                     placeholder={isPerformingAnyAction ? '' : 'E-mail'}
                                     returnKeyType="next" editable={!isPerformingAnyAction}
                                     textContentType="emailAddress" onSubmitEditing={handleEmailSubmitEditing}

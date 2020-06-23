@@ -10,10 +10,14 @@ export const passwordRules = `
 `;
 
 export const validateErrorsMessages = {
-    email: 'Ops... esse email não parece correto.',
+    email: {
+        invalid: 'Ops... esse email não parece correto.',
+        error: 'Erro ao verificar e-mail. Verifique sua conexão.',
+    },
     password: {
         rules: passwordRules,
-        empty: 'Ops... sua senha está vazia.'
+        empty: 'Ops... sua senha está vazia.',
+        notMatch: 'Senhas não correspondem',
     },
     checkConnection: 'Ops... verifique sua conexão',
     login: {
@@ -36,7 +40,7 @@ export const validateErrorsMessages = {
     },
     street: 'Preencha o logradouro',
     city: 'Preencha a cidade',
-
+    accountRegistration: 'Erro ao criar sua conta, tente novamente mais tarde.',
 };
 
 /**
