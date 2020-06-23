@@ -33,10 +33,10 @@ export const DataContainer = styled.View``;
 export const InputContainer = styled.View`
   flex-direction: row;
   width: ${width * 0.7}px;
-  border-color: white;
-  border-width: 1px;
   border-radius: 50px;
   margin: ${({submit}) => !!submit ? 15 : 10}px 0;
+  border-width: ${({error}) => error ? 2 : 1}px;
+  border-color: ${({error}) => error ? Colors.errorColor : 'white'};
 `;
 export const InputCircle = styled(Animated.View)`
   width: 50px;

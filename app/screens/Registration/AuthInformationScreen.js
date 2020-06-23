@@ -20,10 +20,11 @@ export default ({navigation}) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState(undefined);
+    const [emailField, setEmailField] = useState(undefined);
     const [passwordField, setPasswordField] = useState(undefined);
     const [confirmPasswordField, setConfirmPasswordField] = useState(undefined);
     const [widthAnimation] = useState(new Animated.Value(20));
-
+    const [errorField, setErrorField] = useState('');
     /**
      * Perform register account request
      * @returns {Promise<boolean>}
@@ -70,17 +71,29 @@ export default ({navigation}) => {
      */
     const handleEmailSubmitEditing = async () => {
         if (!validEmail((email || ''))) {
+            setErrorField('email');
+            if (emailField) {
+                emailField.focus();
+            }
             return setMessage(validateErrorsMessages.email.invalid);
         }
         setIsPerformingAnyAction(true);
         startAnimation();
         const validatedEmail = await checkEmail(email);
         if (validatedEmail.error) {
+            if (emailField) {
+                emailField.focus();
+            }
             setIsPerformingAnyAction(false);
+            setErrorField('email');
             return setMessage(validateErrorsMessages.email.error);
         }
         if (!validatedEmail.success) {
+            if (emailField) {
+                emailField.focus();
+            }
             setIsPerformingAnyAction(false);
+            setErrorField('email');
             return setMessage(validatedEmail.result);
         }
         await resetAnimation();
@@ -95,6 +108,10 @@ export default ({navigation}) => {
     const handlePasswordSubmitEditing = () => {
         if (!validPassword(password)) {
             setPassword('');
+            setErrorField('password');
+            if (passwordField) {
+                passwordField.focus();
+            }
             return setMessage(validateErrorsMessages.password.rules);
         }
         if (confirmPasswordField) {
@@ -109,6 +126,10 @@ export default ({navigation}) => {
     const handleConfirmPasswordSubmitEditing = async () => {
         if (!validPassword(confirmPassword)) {
             setConfirmPassword('');
+            setErrorField('confirmPassword');
+            if (confirmPasswordField) {
+                confirmPasswordField.focus();
+            }
             return setMessage(validateErrorsMessages.password.rules);
         }
         await handleNextPress();
@@ -120,18 +141,31 @@ export default ({navigation}) => {
      */
     const handleNextPress = async () => {
         if (!validEmail(email)) {
+            setErrorField('email');
+            if (emailField) {
+                emailField.focus();
+            }
             return setMessage(validateErrorsMessages.email.invalid);
         }
         if (!validPassword(password)) {
+            setErrorField('password');
+            if (passwordField) {
+                passwordField.focus();
+            }
             return setMessage(validateErrorsMessages.password.rules);
         }
         if (!validPassword(confirmPassword)) {
+            setErrorField('confirmPassword');
+            if (confirmPasswordField) {
+                confirmPasswordField.focus();
+            }
             return setMessage(validateErrorsMessages.password.rules);
         }
         if (password !== confirmPassword) {
             if (confirmPasswordField) {
                 confirmPasswordField.focus();
             }
+            setErrorField('confirmPassword');
             return setMessage(validateErrorsMessages.password.notMatch);
         }
         startAnimation();
@@ -139,10 +173,18 @@ export default ({navigation}) => {
         const validatedEmail = await checkEmail(email);
         if (validatedEmail.error) {
             setIsPerformingAnyAction(false);
+            setErrorField('email');
+            if (emailField) {
+                emailField.focus();
+            }
             return setMessage(validateErrorsMessages.email.error);
         }
         if (!validatedEmail.success) {
             setIsPerformingAnyAction(false);
+            setErrorField('email');
+            if (emailField) {
+                emailField.focus();
+            }
             return setMessage(validatedEmail.result);
         }
         await Promise.all([
@@ -150,7 +192,6 @@ export default ({navigation}) => {
             storeData(keys.registration.password, password)
         ]);
         const user = await registerAccount();
-        console.log(user);
         await resetAnimation();
         setIsPerformingAnyAction(false);
         if (!user) {
@@ -213,7 +254,7 @@ export default ({navigation}) => {
                                     <S.MessageText>{message}</S.MessageText>
                                 </S.MessageBox>
                             ) : null}
-                            <S.InputContainer>
+                            <S.InputContainer error={errorField === 'email'}>
                                 <S.InputCircle style={
                                     {
                                         width: isPerformingAnyAction ? widthAnimation.interpolate({
@@ -227,13 +268,13 @@ export default ({navigation}) => {
                                 <S.InputField
                                     onChangeText={setEmail} autoCompleteType="email"
                                     keyboardType="email-address" value={email} autoCapitalize="none"
-                                    placeholder={isPerformingAnyAction ? '' : 'E-mail'}
+                                    placeholder={isPerformingAnyAction ? '' : 'E-mail'} ref={setEmailField}
                                     returnKeyType="next" editable={!isPerformingAnyAction}
                                     textContentType="emailAddress" onSubmitEditing={handleEmailSubmitEditing}
                                     style={{color: isPerformingAnyAction ? 'transparent' : 'white'}}
                                 />
                             </S.InputContainer>
-                            <S.InputContainer>
+                            <S.InputContainer error={errorField === 'password'}>
                                 <S.InputCircle style={
                                     {
                                         width: isPerformingAnyAction ? widthAnimation.interpolate({
@@ -254,7 +295,7 @@ export default ({navigation}) => {
                                     style={{color: isPerformingAnyAction ? 'transparent' : 'white'}}
                                 />
                             </S.InputContainer>
-                            <S.InputContainer>
+                            <S.InputContainer error={errorField === 'confirmPassword'}>
                                 <S.InputCircle style={
                                     {
                                         width: isPerformingAnyAction ? widthAnimation.interpolate({

@@ -21,10 +21,11 @@ export default ({navigation}) => {
     const [cnpj, setCnpj] = useState('');
     const [phone, setPhone] = useState('');
     const [message, setMessage] = useState(undefined);
+    const [nameField, setNameField] = useState(undefined);
     const [cnpjField, setCnpjField] = useState(undefined);
     const [phoneField, setPhoneField] = useState(undefined);
     const [widthAnimation] = useState(new Animated.Value(20));
-
+    const [errorField, setErrorField] = useState('');
     /**
      * Focus on cnpj field when name keyboard submit editing
      */
@@ -68,6 +69,10 @@ export default ({navigation}) => {
     const handleCnpjSubmitEditing = async () => {
         const rawCnpj = cnpjField.getRawValue();
         if (!validateCnpj(rawCnpj)) {
+            setErrorField('cnpj');
+            if (cnpjField) {
+                cnpjField.getElement().focus();
+            }
             return setMessage(validateErrorsMessages.cnpj.invalid);
         }
         setIsPerformingAnyAction(true);
@@ -80,6 +85,10 @@ export default ({navigation}) => {
         }
         if (!validCnpj.success) {
             setIsPerformingAnyAction(false);
+            setErrorField('cnpj');
+            if (cnpjField) {
+                cnpjField.getElement().focus();
+            }
             return setMessage(validCnpj.result);
         }
         setIsPerformingAnyAction(false);
@@ -97,33 +106,61 @@ export default ({navigation}) => {
         const rawPhone = phoneField.getRawValue();
         if (isEmpty(name)) {
             setIsPerformingAnyAction(false);
+            setErrorField('name');
+            if (nameField) {
+                nameField.focus();
+            }
             return setMessage(validateErrorsMessages.name);
         }
         if (!validateCnpj(rawCnpj)) {
             setIsPerformingAnyAction(false);
+            setErrorField('cnpj');
+            if (cnpjField) {
+                cnpjField.getElement().focus();
+            }
             return setMessage(validateErrorsMessages.cnpj.invalid);
         }
         if (!validPhone(rawPhone)) {
             setIsPerformingAnyAction(false);
+            setErrorField('phone');
+            if (phoneField) {
+                phoneField.getElement().focus();
+            }
             return setMessage(validateErrorsMessages.phone.invalid);
         }
         startAnimation();
         const validCnpj = await checkCnpj(rawCnpj);
         if (validCnpj.error) {
             setIsPerformingAnyAction(false);
+            setErrorField('cnpj');
+            if (cnpjField) {
+                cnpjField.getElement().focus();
+            }
             return setMessage(validateErrorsMessages.cnpj.error);
         }
         if (!validCnpj.success) {
             setIsPerformingAnyAction(false);
+            setErrorField('cnpj');
+            if (cnpjField) {
+                cnpjField.getElement().focus();
+            }
             return setMessage(validCnpj.result);
         }
         const validCelPhone = await checkPhone(rawPhone);
         if (validCelPhone.error) {
-            setIsPerformingAnyAction(false);
+            setIsPerformingAnyAction(false)
+            setErrorField('phone');
+            if (phoneField) {
+                phoneField.getElement().focus();
+            }
             return setMessage(validateErrorsMessages.phone.error);
         }
         if (!validCelPhone.success) {
             setIsPerformingAnyAction(false);
+            setErrorField('phone');
+            if (phoneField) {
+                phoneField.getElement().focus();
+            }
             return setMessage(validCelPhone.result);
         }
         await Promise.all([
@@ -193,7 +230,7 @@ export default ({navigation}) => {
                                     <S.MessageText>{message}</S.MessageText>
                                 </S.MessageBox>
                             ) : null}
-                            <S.InputContainer>
+                            <S.InputContainer error={errorField === 'name'}>
                                 <S.InputCircle style={
                                     {
                                         width: isPerformingAnyAction ? widthAnimation.interpolate({
@@ -205,6 +242,7 @@ export default ({navigation}) => {
                                     <S.NameIcon />
                                 </S.InputCircle>
                                 <S.InputField
+                                    ref={setNameField}
                                     onChangeText={setName} autoCompleteType="name"
                                     keyboardType="default" value={name}
                                     placeholder={isPerformingAnyAction ? '' : 'Nome da entidade'}
@@ -213,7 +251,7 @@ export default ({navigation}) => {
                                     style={{color: isPerformingAnyAction ? 'transparent' : 'white'}}
                                 />
                             </S.InputContainer>
-                            <S.InputContainer>
+                            <S.InputContainer error={errorField === 'cnpj'}>
                                 <S.InputCircle style={
                                     {
                                         width: isPerformingAnyAction ? widthAnimation.interpolate({
@@ -234,7 +272,7 @@ export default ({navigation}) => {
                                     style={{color: isPerformingAnyAction ? 'transparent' : 'white'}}
                                 />
                             </S.InputContainer>
-                            <S.InputContainer>
+                            <S.InputContainer error={errorField === 'phone'}>
                                 <S.InputCircle style={
                                     {
                                         width: isPerformingAnyAction ? widthAnimation.interpolate({

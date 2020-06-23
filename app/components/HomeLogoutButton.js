@@ -12,7 +12,7 @@ export default ({navigation}) => {
      * @returns {Promise<void>}
      */
     const handleLogoutButtonPress = async () => {
-        await Promise.all([storeData(keys.token, false), storeData(keys.user, false)]);
+        await Promise.all([storeData(keys.token, null), storeData(keys.user, null)]);
         navigation.dispatch(
             CommonActions.navigate({
                 name: 'Login',

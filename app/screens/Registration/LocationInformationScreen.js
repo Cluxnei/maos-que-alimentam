@@ -24,6 +24,7 @@ export default ({navigation}) => {
     const [cityField, setCityField] = useState(undefined);
     const [notOnLoad, setNotOnLoad] = useState(true);
     const [widthAnimation] = useState(new Animated.Value(20));
+    const [errorField, setErrorField] = useState('');
 
     /**
      * Perform request to find zipcode information
@@ -48,6 +49,10 @@ export default ({navigation}) => {
         const rawZipcode = zipcodeField.getRawValue();
         if (!validCep(rawZipcode)) {
             setIsPerformingAnyAction(false);
+            setErrorField('zipcode');
+            if (zipcodeField) {
+                zipcodeField.focus();
+            }
             return setMessage(validateErrorsMessages.zipcode.invalid);
         }
         startAnimation();
@@ -55,6 +60,10 @@ export default ({navigation}) => {
         await resetAnimation();
         if (location.error) {
             setIsPerformingAnyAction(false);
+            setErrorField('zipcode');
+            if (zipcodeField) {
+                zipcodeField.focus();
+            }
             return setMessage(validateErrorsMessages.zipcode.notFound);
         }
         setStreet(location.street);
@@ -88,14 +97,26 @@ export default ({navigation}) => {
         const rawZipcode = zipcodeField.getRawValue();
         if (!validCep(rawZipcode)) {
             setIsPerformingAnyAction(false);
+            setErrorField('zipcode');
+            if (zipcodeField) {
+                zipcodeField.focus();
+            }
             return setMessage(validateErrorsMessages.zipcode.invalid);
         }
         if (isEmpty(street)) {
             setIsPerformingAnyAction(false);
+            setErrorField('street');
+            if (streetField) {
+                streetField.focus();
+            }
             return setMessage(validateErrorsMessages.street);
         }
         if (isEmpty(city)) {
             setIsPerformingAnyAction(false);
+            setErrorField('city');
+            if (cityField) {
+                cityField.focus();
+            }
             return setMessage(validateErrorsMessages.city);
         }
         startAnimation();
@@ -175,7 +196,7 @@ export default ({navigation}) => {
                                     <S.MessageText>{message}</S.MessageText>
                                 </S.MessageBox>
                             ) : null}
-                            <S.InputContainer>
+                            <S.InputContainer error={errorField === 'zipcode'}>
                                 <S.InputCircle style={
                                     {
                                         width: isPerformingAnyAction ? widthAnimation.interpolate({
@@ -194,7 +215,7 @@ export default ({navigation}) => {
                                     style={{color: isPerformingAnyAction ? 'transparent' : 'white'}}
                                 />
                             </S.InputContainer>
-                            <S.InputContainer>
+                            <S.InputContainer error={errorField === 'street'}>
                                 <S.InputCircle style={
                                     {
                                         width: isPerformingAnyAction ? widthAnimation.interpolate({
@@ -215,7 +236,7 @@ export default ({navigation}) => {
                                     onSubmitEditing={handleStreetSubmitEditing}
                                 />
                             </S.InputContainer>
-                            <S.InputContainer>
+                            <S.InputContainer error={errorField === 'city'}>
                                 <S.InputCircle style={
                                     {
                                         width: isPerformingAnyAction ? widthAnimation.interpolate({

@@ -58,10 +58,7 @@ export const isNotUndefined = (_) => !isUndefined(_);
  * @returns {boolean}
  */
 export const isEmpty = (_) => {
-    if (typeof _ === 'boolean') {
-        return true;
-    }
-    if (_ === null || isUndefined(_)) {
+    if (typeof _ === 'boolean' || _ === null || isUndefined(_)) {
         return true;
     }
     const validationByType = {
