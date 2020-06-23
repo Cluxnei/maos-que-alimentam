@@ -2,18 +2,20 @@ import React, {useEffect, useState} from 'react';
 import {Animated} from 'react-native';
 import Loading from '../../components/Loading';
 import * as S from '../../styles/Registration';
-import {storeData} from "../../storage";
-import {keys} from "../../storage/Keys";
-import {validNotEmpty, validPhone} from "../../constants/Validate";
+import {storeData} from '../../storage';
+import {keys} from '../../storage/Keys';
+import {isEmpty, isNotEmpty, validateErrorsMessages, validPhone} from '../../constants/Validate';
 import logo from '../../assets/logo.png';
 import background from '../../assets/background.png';
-import {delay, getRegistration} from "../../constants/Utils";
-import {validateCnpj} from "react-native-masked-text/lib/masks/cnpj.mask";
+import {delay, getRegistration} from '../../constants/Utils';
+import {validateCnpj} from 'react-native-masked-text/lib/masks/cnpj.mask';
 import axios from '../../api/index';
 import routes from '../../api/Routes';
 
 export default ({navigation}) => {
-    //#region states
+    /**
+     * Local states
+     */
     const [isPerformingAnyAction, setIsPerformingAnyAction] = useState(false);
     const [name, setName] = useState('');
     const [cnpj, setCnpj] = useState('');
@@ -22,13 +24,20 @@ export default ({navigation}) => {
     const [cnpjField, setCnpjField] = useState(undefined);
     const [phoneField, setPhoneField] = useState(undefined);
     const [widthAnimation] = useState(new Animated.Value(20));
-    //#endregion
-    //#region handlers
+
+    /**
+     * Focus on cnpj field when name keyboard submit editing
+     */
     const handleNameSubmitEditing = () => {
         if (cnpjField) {
             cnpjField.getElement().focus();
         }
     };
+    /**
+     * Perform an api request to verify if cnpj is already in use
+     * @param {string} cnpj
+     * @returns {Promise<{error: boolean}|{result, success}>}
+     */
     const checkCnpj = async (cnpj) => {
         try {
             const {data: {success, result}} = await axios.post(routes.checkCnpj, {cnpj});
@@ -37,6 +46,12 @@ export default ({navigation}) => {
             return {error: true};
         }
     };
+
+    /**
+     * Perform an api request to verify if phone is already in use
+     * @param phone
+     * @returns {Promise<{error: boolean}|{result, success}>}
+     */
     const checkPhone = async (phone) => {
         try {
             const {data: {success, result}} = await axios.post(routes.checkPhone, {phone});
@@ -45,10 +60,15 @@ export default ({navigation}) => {
             return {error: true};
         }
     };
+
+    /**
+     * Validate cnpj when keyboard submit editing
+     * @returns {Promise<void>}
+     */
     const handleCnpjSubmitEditing = async () => {
         const rawCnpj = cnpjField.getRawValue();
         if (!validateCnpj(rawCnpj)) {
-            return setMessage('CNPJ inválido.');
+            return setMessage(validateErrorsMessages.cnpj.invalid);
         }
         setIsPerformingAnyAction(true);
         startAnimation();
@@ -56,7 +76,7 @@ export default ({navigation}) => {
         await resetAnimation();
         if (validCnpj.error) {
             setIsPerformingAnyAction(false);
-            return setMessage('Erro ao verificar CNPJ. Verifique sua conexão.');
+            return setMessage(validateErrorsMessages.cnpj.error);
         }
         if (!validCnpj.success) {
             setIsPerformingAnyAction(false);
@@ -67,19 +87,31 @@ export default ({navigation}) => {
             phoneField.getElement().focus();
         }
     };
+    /**
+     * Perform validations, save to storage and navigate to registration next step
+     * @returns {Promise<void>}
+     */
     const handleNextPress = async () => {
         setIsPerformingAnyAction(true);
         const rawCnpj = cnpjField.getRawValue();
         const rawPhone = phoneField.getRawValue();
-        if (!validateCnpj(rawCnpj) || !validPhone(rawPhone) || !validNotEmpty(name)) {
+        if (isEmpty(name)) {
             setIsPerformingAnyAction(false);
-            return setMessage('Preencha corretamente os campos');
+            return setMessage(validateErrorsMessages.name);
+        }
+        if (!validateCnpj(rawCnpj)) {
+            setIsPerformingAnyAction(false);
+            return setMessage(validateErrorsMessages.cnpj.invalid);
+        }
+        if (!validPhone(rawPhone)) {
+            setIsPerformingAnyAction(false);
+            return setMessage(validateErrorsMessages.phone.invalid);
         }
         startAnimation();
         const validCnpj = await checkCnpj(rawCnpj);
         if (validCnpj.error) {
             setIsPerformingAnyAction(false);
-            return setMessage('Erro ao verificar CNPJ. Verifique sua conexão.');
+            return setMessage(validateErrorsMessages.cnpj.error);
         }
         if (!validCnpj.success) {
             setIsPerformingAnyAction(false);
@@ -88,7 +120,7 @@ export default ({navigation}) => {
         const validCelPhone = await checkPhone(rawPhone);
         if (validCelPhone.error) {
             setIsPerformingAnyAction(false);
-            return setMessage('Erro ao verificar celular. Verifique sua conexão.');
+            return setMessage(validateErrorsMessages.phone.error);
         }
         if (!validCelPhone.success) {
             setIsPerformingAnyAction(false);
@@ -103,14 +135,21 @@ export default ({navigation}) => {
         setIsPerformingAnyAction(false);
         navigation.navigate('LocationInformation');
     };
-    //#endregion
-    //#region animation methods
+
+    /**
+     * Start width animation
+     */
     const startAnimation = () => {
         Animated.timing(widthAnimation, {
             toValue: 100,
             duration: 500,
         }).start();
     };
+
+    /**
+     * Revert width animation
+     * @returns {Promise<void>}
+     */
     const resetAnimation = async () => {
         Animated.timing(widthAnimation, {
             toValue: 20,
@@ -118,10 +157,11 @@ export default ({navigation}) => {
         }).start();
         await delay(400);
     };
-    //#endregion
-    //#region methods
 
-    const init = () => {
+    /**
+     * Get previous saved information from storage and fill on local state
+     */
+    const getPreviousInformationFromStorage = () => {
         setIsPerformingAnyAction(true);
         getRegistration().then(({name, cnpj, phone}) => {
             setName(name);
@@ -130,10 +170,13 @@ export default ({navigation}) => {
             setIsPerformingAnyAction(false);
         });
     };
-    //#endregion
-    useEffect(init, []);
+    // Effects
+    useEffect(getPreviousInformationFromStorage, []);
+    /**
+     * Clear message when fields changes
+     */
     useEffect(() => {
-        if (message !== '') {
+        if (isNotEmpty(message)) {
             setMessage('');
         }
     }, [name, cnpj, phone]);
@@ -183,7 +226,7 @@ export default ({navigation}) => {
                                 </S.InputCircle>
                                 <S.CnpjInputField
                                     onChangeText={(text) => setCnpj(text)} autoCompleteType="off"
-                                    keyboardType="numeric" value={cnpj}
+                                    keyboardType="numeric" value={cnpj} autoCaptalize="none"
                                     placeholder={isPerformingAnyAction ? '' : 'CNPJ'}
                                     returnKeyType="next" editable={!isPerformingAnyAction}
                                     textContentType="none" onSubmitEditing={handleCnpjSubmitEditing}
@@ -204,7 +247,7 @@ export default ({navigation}) => {
                                 </S.InputCircle>
                                 <S.PhoneInputField
                                     onChangeText={(text) => setPhone(text)} autoCompleteType="tel"
-                                    keyboardType="numeric" value={phone}
+                                    keyboardType="numeric" value={phone} autoCaptalize="none"
                                     placeholder={isPerformingAnyAction ? '' : 'Celular'}
                                     returnKeyType="done" editable={!isPerformingAnyAction}
                                     textContentType="telephoneNumber" onSubmitEditing={handleNextPress}

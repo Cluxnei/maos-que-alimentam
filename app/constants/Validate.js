@@ -20,6 +20,16 @@ export const validateErrorsMessages = {
         fail: 'Ops... erro ao efetuar login, verifique sua conexão.',
     },
     userAndToken: 'Ops... faça login novamente por favor.',
+    cnpj: {
+        invalid: 'CNPJ inválido.',
+        error: 'Erro ao verificar CNPJ. Verifique sua conexão.',
+    },
+    name: 'Preencha o campo nome.',
+    phone: {
+        invalid: 'Celular inválido',
+        error: 'Erro ao verificar número de celular. Verifique sua conexão.',
+    },
+
 };
 
 /**
