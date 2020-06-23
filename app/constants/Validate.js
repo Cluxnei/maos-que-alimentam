@@ -29,6 +29,13 @@ export const validateErrorsMessages = {
         invalid: 'Celular inválido',
         error: 'Erro ao verificar número de celular. Verifique sua conexão.',
     },
+    zipcode: {
+        invalid: 'Cep inválido',
+        error: '',
+        notFound: 'Cep não encontrado, insira os dados manualmente.'
+    },
+    street: 'Preencha o logradouro',
+    city: 'Preencha a cidade',
 
 };
 

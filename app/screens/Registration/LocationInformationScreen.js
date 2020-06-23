@@ -4,14 +4,16 @@ import Loading from '../../components/Loading';
 import * as S from '../../styles/Registration';
 import {storeData} from "../../storage";
 import {keys} from "../../storage/Keys";
-import {validCep, validNotEmpty} from "../../constants/Validate";
+import {isEmpty, isNotEmpty, validateErrorsMessages, validCep} from "../../constants/Validate";
 import logo from '../../assets/logo.png';
 import background from '../../assets/background.png';
 import {delay, getRegistration} from "../../constants/Utils";
 import searchZipcode from 'cep-promise';
 
 export default ({navigation}) => {
-    //#region states
+    /**
+     * Local state
+     */
     const [isPerformingAnyAction, setIsPerformingAnyAction] = useState(false);
     const [zipcode, setZipcode] = useState('');
     const [street, setStreet] = useState('');
@@ -22,8 +24,12 @@ export default ({navigation}) => {
     const [cityField, setCityField] = useState(undefined);
     const [notOnLoad, setNotOnLoad] = useState(true);
     const [widthAnimation] = useState(new Animated.Value(20));
-    //#endregion
-    //#region handlers
+
+    /**
+     * Perform request to find zipcode information
+     * @param {string} zipcode
+     * @returns {Promise<{error: boolean}|{city: string, street: string}>}
+     */
     const findZipcode = async (zipcode) => {
         try {
             const {street, city} = await searchZipcode(zipcode);
@@ -32,19 +38,24 @@ export default ({navigation}) => {
             return {error: true};
         }
     };
+    /**
+     * Validate zipcode and focus on street when zipcode keyboard
+     * submit editing
+     * @returns {Promise<void>}
+     */
     const handleZipcodeSubmitEditing = async () => {
         setIsPerformingAnyAction(true);
         const rawZipcode = zipcodeField.getRawValue();
         if (!validCep(rawZipcode)) {
             setIsPerformingAnyAction(false);
-            return setMessage('Cep inválido');
+            return setMessage(validateErrorsMessages.zipcode.invalid);
         }
         startAnimation();
         const location = await findZipcode(rawZipcode);
         await resetAnimation();
         if (location.error) {
             setIsPerformingAnyAction(false);
-            return setMessage('Cep não encontrado, insira os dados manualmente.');
+            return setMessage(validateErrorsMessages.zipcode.notFound);
         }
         setStreet(location.street);
         setCity(location.city);
@@ -53,24 +64,39 @@ export default ({navigation}) => {
             streetField.focus();
         }
     };
+    /**
+     * Focus on city when street keyboard submit editing
+     */
     const handleStreetSubmitEditing = () => {
         if (cityField) {
             cityField.focus();
         }
     };
+    /**
+     * Link city keyboard submit editing with next button press
+     * @returns {Promise<void>}
+     */
     const handleCitySubmitEditing = async () => {
         await handleNextPress();
     };
+    /**
+     * Validate, save on storage and navigate to next registration step
+     * @returns {Promise<void>}
+     */
     const handleNextPress = async () => {
         setIsPerformingAnyAction(true);
         const rawZipcode = zipcodeField.getRawValue();
         if (!validCep(rawZipcode)) {
             setIsPerformingAnyAction(false);
-            return setMessage('CEP Inválido!');
+            return setMessage(validateErrorsMessages.zipcode.invalid);
         }
-        if (!validNotEmpty(street) || !validNotEmpty(city)) {
+        if (isEmpty(street)) {
             setIsPerformingAnyAction(false);
-            return setMessage('Dados incorretos!');
+            return setMessage(validateErrorsMessages.street);
+        }
+        if (isEmpty(city)) {
+            setIsPerformingAnyAction(false);
+            return setMessage(validateErrorsMessages.city);
         }
         startAnimation();
         await Promise.all([
@@ -82,14 +108,19 @@ export default ({navigation}) => {
         setIsPerformingAnyAction(false);
         navigation.navigate('AuthInformation');
     };
-    //#endregion
-    //#region animation methods
+    /**
+     * Start width animation
+     */
     const startAnimation = () => {
         Animated.timing(widthAnimation, {
             toValue: 100,
             duration: 500,
         }).start();
     };
+    /**
+     * Revert width animation
+     * @returns {Promise<void>}
+     */
     const resetAnimation = async () => {
         Animated.timing(widthAnimation, {
             toValue: 20,
@@ -97,10 +128,11 @@ export default ({navigation}) => {
         }).start();
         await delay(400);
     };
-    //#endregion
-    //#region methods
 
-    const init = () => {
+    /**
+     * Get previous saved information from storage and fill on local state
+     */
+    const getPreviousInformationFromStorage = () => {
         setIsPerformingAnyAction(true);
         setNotOnLoad(false);
         getRegistration().then(({zipcode, street, city}) => {
@@ -111,19 +143,25 @@ export default ({navigation}) => {
             setNotOnLoad(true);
         });
     };
-    //#endregion
-    useEffect(init, []);
+    // Effects
+    useEffect(getPreviousInformationFromStorage, []);
+    /**
+     * Clear message when fields changes
+     */
     useEffect(() => {
-        if (message !== '') {
+        if (isNotEmpty(message)) {
             setMessage('');
         }
     }, [zipcode, street, city]);
+    /**
+     * Call zipcode keyboard submit editing when length in full filled
+     */
     useEffect(() => {
         if (zipcodeField && notOnLoad && zipcodeField.getRawValue().length === 8) {
             handleZipcodeSubmitEditing().done()
         }
     }, [zipcode])
-    //#region render
+
     return (
         <S.Container>
             <S.Background source={background}>
