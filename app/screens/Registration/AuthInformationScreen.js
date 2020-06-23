@@ -124,6 +124,13 @@ export default ({navigation}) => {
      * @returns {Promise<void>}
      */
     const handleConfirmPasswordSubmitEditing = async () => {
+        if (!validPassword(password)) {
+            setErrorField('password');
+            if (passwordField) {
+                passwordField.focus();
+            }
+            return setMessage(validateErrorsMessages.password.rules);
+        }
         if (!validPassword(confirmPassword)) {
             setConfirmPassword('');
             setErrorField('confirmPassword');
@@ -198,7 +205,7 @@ export default ({navigation}) => {
             return setMessage(validateErrorsMessages.accountRegistration);
         }
         await loginRegisteredUser(user);
-        navigation.navigate('Home', {reset: true});
+        navigation.navigate('Login', {email, password});
     };
     /**
      * Start width animation
@@ -239,6 +246,9 @@ export default ({navigation}) => {
     useEffect(() => {
         if (isNotEmpty(message)) {
             setMessage('');
+        }
+        if (isNotEmpty(errorField)) {
+            setErrorField('');
         }
     }, [email, password, confirmPassword]);
 
@@ -287,7 +297,7 @@ export default ({navigation}) => {
                                 </S.InputCircle>
                                 <S.InputField
                                     onChangeText={setPassword} autoCompleteType="password"
-                                    clearTextOnFocus value={password}
+                                    value={password}
                                     placeholder={isPerformingAnyAction ? '' : 'Senha'}
                                     onSubmitEditing={handlePasswordSubmitEditing} returnKeyType="next"
                                     secureTextEntry selectTextOnFocus textContentType="password"
@@ -308,7 +318,7 @@ export default ({navigation}) => {
                                 </S.InputCircle>
                                 <S.InputField
                                     onChangeText={setConfirmPassword} autoCompleteType="password"
-                                    clearTextOnFocus value={confirmPassword}
+                                    value={confirmPassword}
                                     placeholder={isPerformingAnyAction ? '' : 'Confirmar senha'}
                                     onSubmitEditing={handleConfirmPasswordSubmitEditing} returnKeyType="done"
                                     secureTextEntry selectTextOnFocus textContentType="password"

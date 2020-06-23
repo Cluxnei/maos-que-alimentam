@@ -51,7 +51,7 @@ export default ({navigation}) => {
             setIsPerformingAnyAction(false);
             setErrorField('zipcode');
             if (zipcodeField) {
-                zipcodeField.focus();
+                zipcodeField.getElement().focus();
             }
             return setMessage(validateErrorsMessages.zipcode.invalid);
         }
@@ -62,7 +62,7 @@ export default ({navigation}) => {
             setIsPerformingAnyAction(false);
             setErrorField('zipcode');
             if (zipcodeField) {
-                zipcodeField.focus();
+                zipcodeField.getElement().focus();
             }
             return setMessage(validateErrorsMessages.zipcode.notFound);
         }
@@ -99,7 +99,7 @@ export default ({navigation}) => {
             setIsPerformingAnyAction(false);
             setErrorField('zipcode');
             if (zipcodeField) {
-                zipcodeField.focus();
+                zipcodeField.getElement().focus();
             }
             return setMessage(validateErrorsMessages.zipcode.invalid);
         }
@@ -174,6 +174,9 @@ export default ({navigation}) => {
         if (isNotEmpty(message)) {
             setMessage('');
         }
+        if (isNotEmpty(errorField)) {
+            setErrorField('');
+        }
     }, [zipcode, street, city]);
     /**
      * Call zipcode keyboard submit editing when length in full filled
@@ -207,7 +210,7 @@ export default ({navigation}) => {
                                 }>
                                     <S.ZipcodeIcon />
                                 </S.InputCircle>
-                                <S.CepInputField
+                                <S.zipcodeInputField
                                     onChangeText={(text) => setZipcode(text)} autoCompleteType="postal-code"
                                     value={zipcode} placeholder={isPerformingAnyAction ? '' : 'CEP'}
                                     returnKeyType="next" editable={!isPerformingAnyAction}

@@ -18,7 +18,7 @@ import {delay} from '../constants/Utils';
 import routes from '../api/Routes';
 import axios from '../api/index';
 
-export default (props) => {
+export default ({navigation, route}) => {
     /**
      * Local states
      */
@@ -114,7 +114,7 @@ export default (props) => {
     const loginUser = async () => {
         const [token, user] = await Promise.all([getData(keys.token), getData(keys.user)]);
         if (validUserToken(user, token)) {
-            return props.navigation.navigate('Home', {reset: true});
+            return navigation.navigate('Home', {reset: true});
         }
     };
     /**
@@ -139,12 +139,12 @@ export default (props) => {
      * Navigate to forgot password screen when button press
      * @returns {Promise<WindowClient | null>}
      */
-    const handleForgotPasswordPress = () => props.navigation.navigate('ForgotPassword', {email});
+    const handleForgotPasswordPress = () => navigation.navigate('ForgotPassword', {email});
     /**
      * Navigate to register screen when button press
      * @returns {Promise<WindowClient | null>}
      */
-    const handleSingUpPress = () => props.navigation.navigate('BasicInformation');
+    const handleSingUpPress = () => navigation.navigate('BasicInformation');
     // Effects
     useEffect(loginPreviousLoggedUser, []);
     /**
@@ -155,6 +155,15 @@ export default (props) => {
             setMessage('');
         }
     }, [email, password]);
+
+    useEffect(() => {
+        if (isNotEmpty(route.params) && isNotEmpty(route.params.email) && isNotEmpty(route.params.password)) {
+            setEmail(route.params.email);
+            setPassword(route.params.password);
+            loginPreviousLoggedUser();
+        }
+    }, [navigation, route]);
+
     return (
         <S.Container>
             <S.Background source={background}>

@@ -113,7 +113,7 @@ export const CnpjInputField = styled(TextInputMask).attrs({
   margin-left: -50px;
   color: white;
 `;
-export const CepInputField = styled(TextInputMask).attrs({
+export const zipcodeInputField = styled(TextInputMask).attrs({
     selectionColor,
     autoCorrect: false,
     placeholderTextColor: 'white',

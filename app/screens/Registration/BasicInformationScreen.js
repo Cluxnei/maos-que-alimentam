@@ -213,6 +213,9 @@ export default ({navigation}) => {
      * Clear message when fields changes
      */
     useEffect(() => {
+        if (isNotEmpty(errorField)) {
+            setErrorField('');
+        }
         if (isNotEmpty(message)) {
             setMessage('');
         }
