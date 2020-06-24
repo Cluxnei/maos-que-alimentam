@@ -2,12 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {Animated} from 'react-native';
 import Loading from '../../components/Loading';
 import * as S from '../../styles/Registration';
-import {storeData} from "../../storage";
-import {keys} from "../../storage/Keys";
-import {isNotEmpty, validateErrorsMessages, validEmail, validPassword} from "../../constants/Validate";
+import {storeData} from '../../storage';
+import {keys} from '../../storage/Keys';
+import {isNotEmpty, validateErrorsMessages, validEmail, validPassword} from '../../constants/Validate';
 import logo from '../../assets/logo.png';
 import background from '../../assets/background.png';
-import {delay, getRegistration} from "../../constants/Utils";
+import {clearRegistrationData, delay, getRegistration} from '../../constants/Utils';
 import axios from '../../api/index';
 import routes from "../../api/Routes";
 
@@ -205,6 +205,7 @@ export default ({navigation}) => {
             return setMessage(validateErrorsMessages.accountRegistration);
         }
         await loginRegisteredUser(user);
+        await clearRegistrationData();
         navigation.navigate('Login', {email, password});
     };
     /**

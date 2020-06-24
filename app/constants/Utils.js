@@ -1,5 +1,5 @@
 import {CommonActions} from '@react-navigation/native';
-import {getData} from "../storage";
+import {getData, storeData} from "../storage";
 import {keys} from "../storage/Keys";
 
 export const delay = (ms) => new Promise((res) => setTimeout(res, ms));
@@ -34,4 +34,17 @@ export const getRegistration = async () => {
         email: registration[6],
         password: registration[7],
     };
+};
+
+export const clearRegistrationData = async () => {
+    await Promise.all([
+        storeData(keys.registration.name, null),
+        storeData(keys.registration.cnpj, null),
+        storeData(keys.registration.phone, null),
+        storeData(keys.registration.zipcode, null),
+        storeData(keys.registration.street, null),
+        storeData(keys.registration.city, null),
+        storeData(keys.registration.email, null),
+        storeData(keys.registration.password, null),
+    ]);
 };
