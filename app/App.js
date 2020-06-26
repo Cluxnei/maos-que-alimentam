@@ -1,14 +1,16 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import LoginScreen from "./screens/LoginScreen";
-import HomeScreen from "./screens/HomeScreen";
-import {StatusBar} from "react-native";
-import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
-import Colors from "./constants/Colors";
-import BasicInformationScreen from "./screens/Registration/BasicInformationScreen";
-import LocationInformationScreen from "./screens/Registration/LocationInformationScreen";
-import AuthInformationScreen from "./screens/Registration/AuthInformationScreen";
+import LoginScreen from './screens/LoginScreen';
+import HomeScreen from './screens/HomeScreen';
+import DonateScreen from './screens/DonateScreen';
+import ReceiveScreen from './screens/ReceiveScreen';
+import {StatusBar} from 'react-native';
+import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
+import Colors from './constants/Colors';
+import BasicInformationScreen from './screens/Registration/BasicInformationScreen';
+import LocationInformationScreen from './screens/Registration/LocationInformationScreen';
+import AuthInformationScreen from './screens/Registration/AuthInformationScreen';
 
 const Stack = createStackNavigator();
 
@@ -49,7 +51,13 @@ const Options = {
             title: 'DADOS DE AUTENTICAÇÃO',
             headerTintColor: Colors.secondColor
         }
-    }
+    },
+    Donate: {
+
+    },
+    Receive: {
+
+    },
 };
 
 export default () => (
@@ -63,6 +71,8 @@ export default () => (
                 <Stack.Screen name="LocationInformation" component={LocationInformationScreen} options={Options.Registration.LocationInformation}/>
                 <Stack.Screen name="AuthInformation" component={AuthInformationScreen} options={Options.Registration.AuthInformation}/>
                 <Stack.Screen name="Home" component={HomeScreen} options={Options.HomeScreen}/>
+                <Stack.Screen name="Donate" component={DonateScreen} options={Options.Donate}/>
+                <Stack.Screen name="Receive" component={ReceiveScreen} options={Options.Receive}/>
             </Stack.Navigator>
         </NavigationContainer>
     </>

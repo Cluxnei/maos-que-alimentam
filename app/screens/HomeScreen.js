@@ -9,8 +9,8 @@ import {isEmpty} from "../constants/Validate";
 
 export default ({navigation, route}) => {
     // Handlers
-    const handleDoarButtonPress = () => navigation.navigate('Doar');
-    const handleReceberButtonPress = () => navigation.navigate('Receber');
+    const handleDonateButtonPress = () => navigation.navigate('Donate');
+    const handleReceiveButtonPress = () => navigation.navigate('Receive');
     const getUser = async () => await getData(keys.user);
     // Effects
     useEffect(() => {
@@ -51,14 +51,14 @@ export default ({navigation, route}) => {
         <S.Container>
             <S.Background>
                 <S.Header/>
-                <S.Doador onPress={handleDoarButtonPress}>
-                    <S.Doar/>
+                <S.Donor onPress={handleDonateButtonPress}>
+                    <S.Donate/>
                     <S.Text>Doar</S.Text>
-                </S.Doador>
-                <S.Receptor onPress={handleReceberButtonPress}>
-                    <S.Receber/>
+                </S.Donor>
+                <S.Receiver onPress={handleReceiveButtonPress}>
+                    <S.Receive/>
                     <S.Text>Receber</S.Text>
-                </S.Receptor>
+                </S.Receiver>
             </S.Background>
         </S.Container>
     );

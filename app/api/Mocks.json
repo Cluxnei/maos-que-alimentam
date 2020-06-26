@@ -1,0 +1,24 @@
+{
+  "interests": [
+    {
+      "id": 1,
+      "name": "Melancia verde 800 un"
+    },
+    {
+      "id": 2,
+      "name": "Melancia 30 kg"
+    },
+    {
+      "id": 3,
+      "name": "Melancia 500 l"
+    },
+    {
+      "id": 4,
+      "name": "Melancia 700 ml"
+    },
+    {
+      "id": 5,
+      "name": "Melancia 3080 un"
+    }
+  ]
+}

@@ -32,10 +32,10 @@ export const Header = styled.Image.attrs({
   margin-bottom: 20px;
   transform: rotateZ(3deg);
 `;
-export const Doador = styled.TouchableOpacity`
+export const Donor = styled.TouchableOpacity`
   margin-top: 25px;
 `;
-export const Doar = styled.Image.attrs({
+export const Donate = styled.Image.attrs({
     source: doar,
     resizeMode: 'contain',
 })`
@@ -47,10 +47,8 @@ export const Text = styled.Text`
   text-align: center;
   font-size: 30px;
 `;
-export const Receptor = styled(Doador)`
-
-`;
-export const Receber = styled.Image.attrs({
+export const Receiver = styled(Donor)``;
+export const Receive = styled.Image.attrs({
     source: receber,
     resizeMode: 'contain',
 })`
