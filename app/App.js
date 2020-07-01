@@ -5,6 +5,7 @@ import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import DonateScreen from './screens/DonateScreen';
 import ReceiveScreen from './screens/ReceiveScreen';
+import AddInterestScreen from './screens/AddInterestScreen';
 import {StatusBar} from 'react-native';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import Colors from './constants/Colors';
@@ -52,12 +53,9 @@ const Options = {
             headerTintColor: Colors.secondColor
         }
     },
-    Donate: {
-
-    },
-    Receive: {
-
-    },
+    Donate: {},
+    Receive: {},
+    AddInterest: {},
 };
 
 export default () => (
@@ -73,6 +71,7 @@ export default () => (
                 <Stack.Screen name="Home" component={HomeScreen} options={Options.HomeScreen}/>
                 <Stack.Screen name="Donate" component={DonateScreen} options={Options.Donate}/>
                 <Stack.Screen name="Receive" component={ReceiveScreen} options={Options.Receive}/>
+                <Stack.Screen name="AddInterest" component={AddInterestScreen} options={Options.AddInterest}/>
             </Stack.Navigator>
         </NavigationContainer>
     </>

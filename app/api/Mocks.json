@@ -2,23 +2,60 @@
   "interests": [
     {
       "id": 1,
-      "name": "Melancia verde 800 un"
-    },
-    {
+      "name": "Melancia verde",
+      "quantity": 200,
+      "unit": "un"
+    },{
       "id": 2,
-      "name": "Melancia 30 kg"
-    },
-    {
+      "name": "Melancia verde",
+      "quantity": 200,
+      "unit": "un"
+    },{
       "id": 3,
-      "name": "Melancia 500 l"
-    },
-    {
+      "name": "Melancia verde",
+      "quantity": 200,
+      "unit": "un"
+    },{
       "id": 4,
-      "name": "Melancia 700 ml"
+      "name": "Melancia verde",
+      "quantity": 200,
+      "unit": "un"
+    },{
+      "id": 5,
+      "name": "Melancia verde",
+      "quantity": 200,
+      "unit": "un"
+    },{
+      "id": 6,
+      "name": "Melancia verde",
+      "quantity": 200,
+      "unit": "un"
+    },{
+      "id": 7,
+      "name": "Melancia verde",
+      "quantity": 200,
+      "unit": "un"
+    },{
+      "id": 8,
+      "name": "Melancia verde",
+      "quantity": 200,
+      "unit": "un"
+    },{
+      "id": 9,
+      "name": "Melancia verde",
+      "quantity": 200,
+      "unit": "un"
+    },{
+      "id": 10,
+      "name": "Melancia verde",
+      "quantity": 200,
+      "unit": "un"
     },
     {
-      "id": 5,
-      "name": "Melancia 3080 un"
+      "id": 11,
+      "name": "Melancia verde",
+      "quantity": 200,
+      "unit": "un"
     }
   ]
 }

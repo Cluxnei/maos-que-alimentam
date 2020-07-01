@@ -233,11 +233,19 @@ export default ({navigation}) => {
      * Get previous saved information from storage and fill on local state
      */
     const getPreviousInformationFromStorage = () => {
-        setIsPerformingAnyAction(true);
+        let mount = true;
+        if (mount) {
+            setIsPerformingAnyAction(true);
+        }
         getRegistration().then(({email}) => {
-            setEmail(email);
-            setIsPerformingAnyAction(false);
+            if (mount) {
+                setEmail(email);
+                setIsPerformingAnyAction(false);
+            }
         });
+        return () => {
+            mount = false; 
+        }
     };
     // Effects
     useEffect(getPreviousInformationFromStorage, []);

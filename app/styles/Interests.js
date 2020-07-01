@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 import {Animated, Dimensions} from 'react-native';
-import {FontAwesome} from '@expo/vector-icons';
+import {AntDesign, FontAwesome} from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 
 const {width} = Dimensions.get('screen');
@@ -11,11 +11,13 @@ export const Container = styled.View`
   padding: 20px 0;
   border-bottom-width: 2px;
   border-bottom-color: white;
+  align-items: center;
 `;
 
-export const List = styled.FlatList`
-  width: 100%;
-  margin-left: 15%;
+export const List = styled.FlatList.attrs({
+    showsVerticalScrollIndicator: false,
+})`
+  width: 70%;
 `;
 
 export const ItemContainer = styled.View`
@@ -41,7 +43,10 @@ export const ItemCircle = styled(Animated.View)`
   align-items: center;
   justify-content: center;
 `;
-export const ItemIcon = styled(FontAwesome).attrs({size: 20})`
+export const ItemIcon = styled(FontAwesome).attrs({
+    size: 20,
+    name: 'edit',
+})`
   color: ${primaryColor};
   margin-left: 5px;
   margin-top: 2px;
@@ -49,5 +54,31 @@ export const ItemIcon = styled(FontAwesome).attrs({size: 20})`
 
 export const ItemText = styled.Text`
   padding-left: 60px;
+  color: white;
+`;
+
+export const AddItemButton = styled.TouchableOpacity`
+  width: 70%;
+  border-radius: 30px;
+  background-color: white;
+  padding: 10px 0;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+`;
+
+export const AddItemCircle = styled.View`
+  background-color: ${primaryColor};
+  width: 30px;
+  height: 30px;
+  border-radius: 25px;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const AddItemIcon = styled(AntDesign).attrs({
+    size: 25,
+    name: 'plus',
+})`
   color: white;
 `;

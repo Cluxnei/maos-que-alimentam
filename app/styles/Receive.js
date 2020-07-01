@@ -13,7 +13,7 @@ export const ScrollContainer = styled.ScrollView`
 `;
 
 export const Container = styled.SafeAreaView`
-  flex: 2;
+  flex: 1;
 `;
 
 export const Title = styled.Text`

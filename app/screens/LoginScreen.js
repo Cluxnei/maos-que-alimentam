@@ -11,12 +11,11 @@ import {
     validEmail,
     validUserToken
 } from '../constants/Validate';
-import watermark from '../assets/watermark.png';
-import logo from '../assets/logo.png';
-import background from '../assets/background.png';
 import {delay} from '../constants/Utils';
 import routes from '../api/Routes';
 import axios from '../api/index';
+
+// TODO Adicionar labels com os passos do cadastro
 
 export default ({navigation, route}) => {
     /**
@@ -76,7 +75,7 @@ export default ({navigation, route}) => {
      * Attempt and validate credentials
      * @returns {Promise<void>}
      */
-    const attemptCredentials = async() => {
+    const attemptCredentials = async () => {
         setIsPerformingAnyAction(true);
         setMessage('');
         if (!validEmail(email)) {
@@ -166,11 +165,11 @@ export default ({navigation, route}) => {
 
     return (
         <S.Container>
-            <S.Background source={background}>
+            <S.Background>
                 <S.scroll>
-                    <S.Header resizeMode="stretch" source={watermark}/>
+                    <S.Header/>
                     <S.body>
-                        <S.Logo source={logo}/>
+                        <S.Logo/>
                         <S.DataContainer>
                             {message ? (
                                 <S.MessageBox>
@@ -186,7 +185,7 @@ export default ({navigation, route}) => {
                                         }) : 50
                                     }
                                 }>
-                                    <S.InputIcon name="user"/>
+                                    <S.InputIcon name="user" />
                                 </S.InputCircle>
                                 <S.InputField
                                     onChangeText={setEmail} autoCompleteType="email"

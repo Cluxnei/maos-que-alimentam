@@ -12,5 +12,6 @@ keys = {
         zipcode: 'registrationZipcode',
         street: 'registrationStreet',
         city: 'registrationCity'
-    }
+    },
+    interests: 'interests',
 };

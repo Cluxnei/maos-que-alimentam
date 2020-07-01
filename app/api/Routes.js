@@ -6,5 +6,9 @@ export default {
     checkEmail: '/check/email',
     checkCnpj: '/check/cnpj',
     checkPhone: '/check/phone',
-    register: '/register'
+    register: '/register',
+    // Receive
+    getInterests: '/interests',
+    setInterest: '/interests',
+    updateInterest: '/interests',
 };

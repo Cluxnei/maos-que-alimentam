@@ -2,6 +2,9 @@ import styled from 'styled-components/native';
 import Colors from '../constants/Colors';
 import { EvilIcons } from '@expo/vector-icons';
 import {Dimensions, Animated, KeyboardAvoidingView} from 'react-native';
+import watermark from '../assets/watermark.png';
+import background from '../assets/background.png';
+import logo from '../assets/logo.png';
 
 const {primaryColor, secondColor, selectionColor} = Colors;
 const {width} = Dimensions.get('screen');
@@ -9,32 +12,44 @@ const {width} = Dimensions.get('screen');
 export const Container = styled.View`
   flex: 1;
 `;
+
 export const Background = styled.ImageBackground.attrs({
     resizeMode: 'cover',
+    source: background,
 })`
   width: 100%;
   height: 100%;
   flex: 1;
 `;
+
 export const scroll = styled(KeyboardAvoidingView).attrs({
     behavior: 'position',
     keyboardVerticalOffset: -64
 })``;
-export const Header = styled.Image`
+
+export const Header = styled.Image.attrs({
+    resizeMode: 'stretch',
+    source: watermark,
+})`
   width: 100%;
   height: 90px;
 `;
+
 export const body = styled.View`
   margin: 0 20px;
   align-items: center;
 `;
+
 export const Logo = styled.Image.attrs({
     resizeMode: 'contain',
+    source: logo,
 })
 `
   width: 90%;
 `;
+
 export const DataContainer = styled.View``;
+
 export const InputContainer = styled.View`
   flex-direction: row;
   width: ${width * 0.7}px;
@@ -43,6 +58,7 @@ export const InputContainer = styled.View`
   border-radius: 50px;
   margin: ${({submit}) => !!submit ? 15 : 5}px 0;
 `;
+
 export const InputCircle = styled(Animated.View)`
   width: 50px;
   height: 50px;
@@ -51,9 +67,13 @@ export const InputCircle = styled(Animated.View)`
   align-items: center;
   justify-content: center;
 `;
-export const InputIcon = styled(EvilIcons).attrs({size: 35})`
+
+export const InputIcon = styled(EvilIcons).attrs({
+    size: 35,
+})`
   color: ${primaryColor};
 `;
+
 export const InputField = styled.TextInput.attrs({
     selectionColor,
     autoCorrect: false,
@@ -66,6 +86,7 @@ export const InputField = styled.TextInput.attrs({
   margin-left: -50px;
   color: white;
 `;
+
 export const SubmitButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
@@ -75,39 +96,47 @@ export const SubmitButton = styled.TouchableOpacity`
   background-color: white;
   border-radius: 50px;
 `;
+
 export const SubmitButtonText = styled.Text`
   color: ${secondColor};
 `;
+
 export const LinksContainer = styled.View`
   width: 80%;
   margin-top: 15px;
   align-items: center;
 `;
+
 export const SingUpContainer = styled.View`
   flex-direction: row;
   justify-content: space-around;
   width: 100%;
 `;
+
 export const QuestionText = styled.Text`
   color: white;
 `;
-export const SingUpButton = styled.TouchableOpacity`
-  
-`;
+
+export const SingUpButton = styled.TouchableOpacity``;
+
 export const SingUpButtonText = styled.Text`
   color: white;
   font-weight: bold;
 `;
+
 export const ForgotPasswordButton = styled.TouchableOpacity`
   align-items: center;
   margin-top: 30px;
 `;
+
 export const ForgotPasswordButtonText = styled.Text`
   color: white;
 `;
+
 export const LoadingContainer = styled.View`
   flex-direction: row;
 `;
+
 export const MessageBox = styled.View`
   background-color: white;
   padding: 10px 20px;
@@ -115,6 +144,7 @@ export const MessageBox = styled.View`
   width: ${width * 0.7}px;
   margin-bottom: 10px;
 `;
+
 export const MessageText = styled.Text`
   color: ${primaryColor};
   font-size: 16px;

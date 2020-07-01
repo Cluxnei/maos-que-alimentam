@@ -21,4 +21,7 @@ Route::name('api.')->group(static function () {
         Route::post('/cnpj', 'Api\UserController@checkCNPJ')->name('cnpj');
         Route::post('/phone', 'Api\UserController@checkPhone')->name('phone');
     });
+    Route::get('/interests', 'Api\InterestController@index')->name('interests.index');
+    Route::post('/interests', 'Api\InterestController@store')->name('interests.store');
+    Route::put('/interests/{interest}', 'Api\InterestController@update')->name('interests.update');
 });

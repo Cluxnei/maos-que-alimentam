@@ -36,6 +36,9 @@ export const validateErrorsMessages = {
     street: 'Preencha o logradouro',
     city: 'Preencha a cidade',
     accountRegistration: 'Erro ao criar sua conta, tente novamente mais tarde.',
+    item: 'Ops... selecione um item',
+    unit: 'Ops... selecione uma unidade',
+    quantity: 'Ops... qual quantidade?',
 };
 
 /**
