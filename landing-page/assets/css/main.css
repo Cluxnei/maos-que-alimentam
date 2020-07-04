@@ -2254,6 +2254,9 @@ input, select, textarea {
 		.icon.brands:before {
 			font-family: 'Font Awesome 5 Brands';
 		}
+		.icon img{
+			max-width: 100%;
+		}
 
 		.icon.major {
 			border: solid 1px;
@@ -3117,11 +3120,17 @@ input, select, textarea {
 				display: block;
 				margin: 0 0 1.5em 0;
 			}
-
+				#header.alt .logo {
+					display: flex;
+					flex-direction: row;
+				}
 				#header.alt .logo img {
-					display: block;
-					margin: 0 auto;
-					max-width: 75%;
+					max-width: 50%;
+				}
+				#header.alt .logo img:first-child {
+					animation: pulsar 1s infinite;
+					transition: all 1s ease-in-out;
+					max-width: 35%;
 				}
 
 		@media screen and (max-width: 1280px) {
@@ -3783,3 +3792,12 @@ input, select, textarea {
 			}
 
 		}
+
+@keyframes pulsar {
+	100% {
+		transform: scale(1);
+	}
+    50% {
+		transform: scale(1.01);
+	}
+}
