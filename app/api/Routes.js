@@ -11,4 +11,6 @@ export default {
     getInterests: '/interests',
     setInterest: '/interests',
     updateInterest: '/interests',
+    getItems: '/items',
+    storeItem: '/items',
 };

@@ -49,13 +49,13 @@ export default ({navigation}) => {
                             <S.MessageText>{message}</S.MessageText>
                         </S.MessageBox>
                     ) : null}
-                    <S.SelectItemButton>
+                    <S.SelectItemButton onPress={handleSelectItemButtonPress}>
                         <S.SelectItemLabel>{item ? item : 'Selecionar item'}</S.SelectItemLabel>
                         <S.InputCircle>
                             <S.SelectItemIcon />
                         </S.InputCircle>
                     </S.SelectItemButton>
-                    <S.SelectItemUnitButton>
+                    <S.SelectItemUnitButton onPress={handleSelectUnitButtonPress}>
                         <S.SelectItemLabel>{unit ? unit : 'Selecionar unidade'}</S.SelectItemLabel>
                         <S.InputCircle>
                             <S.SelectUnitIcon />

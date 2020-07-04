@@ -39,6 +39,7 @@ export const validateErrorsMessages = {
     item: 'Ops... selecione um item',
     unit: 'Ops... selecione uma unidade',
     quantity: 'Ops... qual quantidade?',
+    error: 'Ops... parece que houve um erro, tente novamente',
 };
 
 /**

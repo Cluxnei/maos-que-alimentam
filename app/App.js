@@ -6,12 +6,16 @@ import HomeScreen from './screens/HomeScreen';
 import DonateScreen from './screens/DonateScreen';
 import ReceiveScreen from './screens/ReceiveScreen';
 import AddInterestScreen from './screens/AddInterestScreen';
+import SelectItemScreen from './screens/SelectItemScreen';
+import SelectUnitScreen from './screens/SelectUnitScreen';
+import AddItemScreen from './screens/AddItemScreen';
 import {StatusBar} from 'react-native';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import Colors from './constants/Colors';
 import BasicInformationScreen from './screens/Registration/BasicInformationScreen';
 import LocationInformationScreen from './screens/Registration/LocationInformationScreen';
 import AuthInformationScreen from './screens/Registration/AuthInformationScreen';
+
 
 const Stack = createStackNavigator();
 
@@ -56,6 +60,9 @@ const Options = {
     Donate: {},
     Receive: {},
     AddInterest: {},
+    SelectItem: {},
+    SelectUnit: {},
+    AddItem: {},
 };
 
 export default () => (
@@ -72,6 +79,9 @@ export default () => (
                 <Stack.Screen name="Donate" component={DonateScreen} options={Options.Donate}/>
                 <Stack.Screen name="Receive" component={ReceiveScreen} options={Options.Receive}/>
                 <Stack.Screen name="AddInterest" component={AddInterestScreen} options={Options.AddInterest}/>
+                <Stack.Screen name="SelectItem" component={SelectItemScreen} options={Options.SelectItem}/>
+                <Stack.Screen name="SelectUnit" component={SelectUnitScreen} options={Options.SelectUnit}/>
+                <Stack.Screen name="AddItem" component={AddItemScreen} options={Options.AddItem}/>
             </Stack.Navigator>
         </NavigationContainer>
     </>

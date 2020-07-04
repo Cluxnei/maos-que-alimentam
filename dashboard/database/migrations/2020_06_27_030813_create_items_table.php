@@ -16,8 +16,13 @@ class CreateItemsTable extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->boolean('approved')->default(0);
+            $table->foreignId('created_by');
+            $table->foreignId('approved_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
+            $table->foreign('created_by')->references('id')->on('users');
+            $table->foreign('approved_by')->references('id')->on('users');
         });
     }
 
@@ -28,6 +33,10 @@ class CreateItemsTable extends Migration
      */
     public function down()
     {
+        Schema::table('items', function (Blueprint $table) {
+            $table->dropForeign('created_by');
+            $table->dropForeign('approved_by');
+        });
         Schema::dropIfExists('items');
     }
 }

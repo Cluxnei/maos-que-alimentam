@@ -14,14 +14,14 @@ class UserSeeder extends Seeder
     public function run()
     {
         User::create([
-            'name' => 'Kelvin Cluxnei',
-            'email' => 'cluxnei31@gmail.com',
+            'name' => 'Dev Developer',
+            'email' => 'dev@dev.dev',
             'cnpj' => '09755495000133',
             'zipcode' => '18021310',
-            'street' => 'Ambrozina do Amaral Marchetti',
-            'city' => 'Sorocaba',
-            'phone' => '13996511446',
-            'password' => Hash::make('123')
+            'street' => 'Devlandia coders',
+            'city' => 'Programing Language',
+            'phone' => '01010101010',
+            'password' => Hash::make('dev')
         ]);
     }
 }
