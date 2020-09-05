@@ -7,7 +7,7 @@ import reducer from './reducers';
 const middleware = [];
 
 if (__DEV__) {
-  middleware.push(createLogger());
+  // middleware.push(createLogger());
 }
 const persistConfig = {
   key: 'root',

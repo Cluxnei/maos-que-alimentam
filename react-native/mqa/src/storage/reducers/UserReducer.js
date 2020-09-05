@@ -1,7 +1,18 @@
 import {SET_USER} from '../actions/types';
 
 const initialState = {
-  user: {},
+  user: {
+    name: '',
+    phone: '',
+    cnpj: '',
+    zipcode: '',
+    street: '',
+    city: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    token: '',
+  },
 };
 
 export default (state = initialState, action) => {
@@ -10,10 +21,7 @@ export default (state = initialState, action) => {
       const {user} = action;
       return {
         ...state,
-        user: {
-          id: user.id,
-          name: user.name,
-        },
+        user,
       };
     default:
       return state;

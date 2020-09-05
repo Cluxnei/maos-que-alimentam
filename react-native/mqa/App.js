@@ -14,6 +14,12 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 // Screens
 import LoginScreen from './src/screens/LoginScreen';
+import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
+// Registration screens
+import BasicInformationScreen from './src/screens/Registration/BasicInformationScreen';
+import LocationInformationScreen from './src/screens/Registration/LocationInformationScreen';
+import AuthInformationScreen from './src/screens/Registration/AuthInformationScreen';
+import HomeScreen from "./src/screens/HomeScreen";
 // Custom Components
 import SplashScreen from './src/components/SplashScreen';
 // Messages
@@ -30,9 +36,16 @@ const Options = {
   Splash: {
     header: () => null,
   },
-  LoginScreen: {
+  Login: {
     header: () => null,
   },
+  ForgotPassword: {},
+  Registration: {
+    Basic: {},
+    Location: {},
+    Auth: {},
+  },
+  Home: {},
 };
 
 export default () => (
@@ -50,7 +63,32 @@ export default () => (
             <Stack.Screen
               name="Login"
               component={LoginScreen}
-              options={Options.LoginScreen}
+              options={Options.Login}
+            />
+            <Stack.Screen
+              name="ForgotPassword"
+              component={ForgotPasswordScreen}
+              options={Options.ForgotPassword}
+            />
+            <Stack.Screen
+              name="BasicInformation"
+              component={BasicInformationScreen}
+              options={Options.Registration.Basic}
+            />
+            <Stack.Screen
+              name="LocationInformation"
+              component={LocationInformationScreen}
+              options={Options.Registration.Location}
+            />
+            <Stack.Screen
+              name="AuthInformation"
+              component={AuthInformationScreen}
+              options={Options.Registration.Auth}
+            />
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+              options={Options.Home}
             />
           </Stack.Navigator>
         </NavigationContainer>
