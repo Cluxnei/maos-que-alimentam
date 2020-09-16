@@ -2,21 +2,19 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as yup from 'yup';
+import * as S from './styles';
 import {
   View,
-  Text,
   TouchableOpacity,
-  KeyboardAvoidingView,
   Platform,
 } from 'react-native';
 import { Formik } from 'formik';
-import styles from './styles';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { colors } from '../../styles';
 import { Creators as LoginActions } from '../../store/ducks/login';
 
-const Login = ({ navigation }) => {
+const Login = () => {
   const { loading } = useSelector((state) => state.login);
   const dispatch = useDispatch();
 
@@ -25,10 +23,7 @@ const Login = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
+    <S.Container behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View style={{ width: '60%' }}>
         <Formik
           validateOnBlur={false}
@@ -79,12 +74,12 @@ const Login = ({ navigation }) => {
         </Formik>
       </View>
       <TouchableOpacity onPress={() => {}}>
-        <Text style={styles.text}>CADASTRE-SE</Text>
+        <S.Text >CADASTRE-SE</S.Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => {}}>
-        <Text style={styles.text}>ESQUECEU SENHA?</Text>
+        <S.Text>ESQUECEU SENHA?</S.Text>
       </TouchableOpacity>
-    </KeyboardAvoidingView>
+    </S.Container>
   );
 };
 

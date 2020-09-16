@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { SplashScreen } from 'expo';
 import FlashMessage from 'react-native-flash-message';
 import { Provider } from 'react-redux';
@@ -13,11 +13,11 @@ import { colors } from './styles';
 import { store } from './store';
 
 export default function App() {
-  const [isLoadingComplete, setLoadingComplete] = React.useState(
+  const [isLoadingComplete, setLoadingComplete] = useState(
     false,
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function loadResourcesAndDataAsync() {
       try {
         SplashScreen.preventAutoHide();

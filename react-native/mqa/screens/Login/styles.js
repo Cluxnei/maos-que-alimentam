@@ -1,21 +1,19 @@
-import { StyleSheet } from 'react-native';
 import { metrics, colors } from '../../styles';
+import styled from 'styled-components/native';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  img: {
-    width: 200,
-    marginTop: metrics.baseMargin,
-  },
-  text: {
-    color: colors.white,
-    marginTop: metrics.basePadding / 2,
-  },
-});
+export const Container = styled.KeyboardAvoidingView`
+  flex: 1;
+  background-color: ${colors.primary};
+  justify-content: center;
+  align-items: center;
+`;
 
-export default styles;
+export const Image = styled.Image`
+  width: 200px;
+  margin-top: ${metrics.baseMargin};
+`;
+
+export const Text = styled.Text`
+  color: ${colors.white};
+  margin-top: ${metrics.basePadding / 2};
+`;
