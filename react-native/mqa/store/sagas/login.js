@@ -1,77 +1,65 @@
-import { all, call, put, fork, takeLatest } from 'redux-saga/effects';
-import { showMessage } from 'react-native-flash-message';
-
+import {all, call, put, fork, takeLatest, select} from 'redux-saga/effects';
+import {getToken, storeToken} from '../asyncStorage';
 import * as RootNavigation from '../../services/navigation';
-import {
-  Creators as LoginActions,
-  Types as LoginTypes,
-} from '../ducks/login';
+import {Creators as LoginActions, Types as LoginTypes} from '../ducks/login';
 import api from '../../services/api';
-import { colors } from '../../styles';
+import routes from "../../services/routes";
+import {dangerMessage, offlineMessage, successMessage} from "../../services/messages";
 
-function* login({ payload }) {
+function* login() {
   try {
-    /*
-    PRA FAZER UMA CHAMADA A METODOS, VC PODE CHAMAR FUNCOES NORMAIS TB, COMO SALVAR TOKEN ETC
-    yield call (metodo, argumentos)
-    ex: yield call (api.get, url, data)
-    */
-    const { status, data } = yield call(
-      api.get,
-      'https://jsonplaceholder.typicode.com/users',
-    );
-    if (status === 200) {
-      if (
-        data?.find(
-          (e) =>
-            e.username === payload.username &&
-            e.username === payload.password,
-        )
-      ) {
-        /*
-          VC USA O PUT PRA CHAMAR AS ACTIONS, VC PODE PASSAR O DATA POR PARAMETRO
-        */
-        yield put(
-          LoginActions.loginSuccess({ data: 1, success: true }),
-        );
-        showMessage({
-          message: 'Sucesso',
-          description: 'Logado com sucesso!',
-          type: 'success',
-          backgroundColor: colors.success,
-          floating: true,
-          position: 'top',
-        });
-        RootNavigation.navigate('Home');
-      } else {
-        yield put(LoginActions.loginFail());
-        showMessage({
-          message: 'Erro',
-          description: 'Credenciais inválidas!',
-          type: 'error',
-          backgroundColor: colors.tomato,
-          floating: true,
-          position: 'top',
-        });
-      }
+    const {online} = yield select((state) => state.network);
+    if (!online) {
+      yield put(LoginActions.loginFail());
+      return offlineMessage();
     }
+    const {status, data} = yield call(api.post, routes.login, payload);
+    if (status !== 200) {
+      yield put(LoginActions.loginFail());
+      return dangerMessage('Ops', 'Credenciais inválidas!');
+    }
+    const {user, token} = data.result;
+    if (token) {
+      yield call(storeToken, token.accessToken);
+    }
+    yield put(LoginActions.loginSuccess({
+      data: {user},
+      success: true,
+    }));
+    successMessage('Sucesso', 'Logado com sucesso!');
+    RootNavigation.navigate('Home');
   } catch (e) {
     yield put(LoginActions.loginFail());
-    showMessage({
-      message: 'Erro',
-      description: 'Erro ao acessar api',
-      type: 'error',
-      backgroundColor: colors.tomato,
-      floating: true,
-      position: 'top',
-    });
+    dangerMessage('Erro', 'Erro ao acessar o servidor');
   }
+}
+
+function* persistLogin({payload}) {
+  if (payload?.user) {
+    const token = yield call(getToken);
+    if (token) {
+      RootNavigation.navigate('Home');
+    }
+  }
+}
+
+function* logout() {
+  yield storeToken(null);
+  RootNavigation.navigate('Login');
+}
+
+function* persistLoginWatcher() {
+  yield takeLatest(LoginTypes.PERSIST_LOGIN, persistLogin);
 }
 
 function* loginWatcher() {
   yield takeLatest(LoginTypes.LOGIN_REQUEST, login);
 }
 
+function* logoutWatcher() {
+  yield takeLatest(LoginTypes.USER_LOGOUT, logout);
+}
+
 export default function* rootSaga() {
-  yield all([fork(loginWatcher)]);
+  yield all([fork(loginWatcher), fork(persistLoginWatcher), fork(logoutWatcher)]);
 }

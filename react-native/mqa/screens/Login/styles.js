@@ -8,12 +8,7 @@ export const Container = styled.KeyboardAvoidingView`
   align-items: center;
 `;
 
-export const Image = styled.Image`
-  width: 200px;
-  margin-top: ${metrics.baseMargin};
+export const SubContainer = styled.View`
+  width: 80%;
 `;
 
-export const Text = styled.Text`
-  color: ${colors.white};
-  margin-top: ${metrics.basePadding / 2};
-`;

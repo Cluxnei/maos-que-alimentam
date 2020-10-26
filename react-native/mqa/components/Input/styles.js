@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   },
   msg: {
     fontSize: 11,
-    color: colors.tomato,
+    color: colors.danger,
     right: 0,
     flex: 1,
     textAlign: 'right',
