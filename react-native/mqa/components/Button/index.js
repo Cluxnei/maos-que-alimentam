@@ -4,7 +4,7 @@ import { TouchableOpacity, Text } from 'react-native';
 import LottieView from 'lottie-react-native';
 
 import styles from './styles';
-import loadingJson from '../../assets/images/loading.json';
+import loadingJson from '../../assets/animations/loading.json';
 
 const ButtonFill = ({
   title,

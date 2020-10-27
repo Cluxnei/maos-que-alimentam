@@ -3,7 +3,7 @@ import { colors, metrics } from '../../styles';
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    backgroundColor: colors.secundary,
+    backgroundColor: colors.secondary,
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',

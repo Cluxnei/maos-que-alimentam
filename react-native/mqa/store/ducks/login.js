@@ -8,18 +8,18 @@ export const Types = {
 
 const INITIAL_STATE = {
   loading: false,
-  data: null,
   success: false,
+  user: null,
 };
 
 export default function login(state = INITIAL_STATE, action) {
   switch (action.type) {
     case Types.LOGIN_REQUEST:
-      return {...state, loading: true};
+      return {...state, loading: true, success: false};
     case Types.LOGIN_SUCCESS:
-      return {...state, ...action.payload, loading: false};
+      return {...state, ...action.payload, loading: false, success: true};
     case Types.LOGIN_FAIL:
-      return {...state, loading: false};
+      return {...state, loading: false, success: false};
     case Types.USER_LOGOUT:
       return INITIAL_STATE;
     default:

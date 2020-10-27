@@ -14,30 +14,24 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
-     * @param $result
-     * @param $errors
-     * @param null $statusCode
+     * @param array $result
+     * @param int|null $statusCode
      * @return JsonResponse
      */
-    protected function jsonError($result, $errors, $statusCode = null): JsonResponse
+    final public function jsonError(array $result, ?int $statusCode = null): JsonResponse
     {
-        return response()->json([
-            'success' => false,
-            'result' => $result,
-            'errors' => $errors
-        ], (is_null($statusCode) ? Response::HTTP_INTERNAL_SERVER_ERROR : $statusCode));
+        $code = $statusCode === null ? Response::HTTP_INTERNAL_SERVER_ERROR : $statusCode;
+        return response()->json($result, $code);
     }
 
     /**
      * @param $result
-     * @param int $responseCode
+     * @param null|int $responseCode
      * @return JsonResponse
      */
-    protected function jsonSuccess($result, $responseCode = 200): JsonResponse
+    final public function jsonSuccess(array $result, ?int $responseCode = null): JsonResponse
     {
-        return response()->json([
-            'success' => true,
-            'result' => $result,
-        ], $responseCode);
+        $code = $responseCode === null ? Response::HTTP_OK : $responseCode;
+        return response()->json($result, $code);
     }
 }

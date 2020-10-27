@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import * as yup from 'yup';
 import * as S from './styles';
@@ -8,66 +8,100 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import {colors} from '../../styles';
 import {Creators as LoginActions} from '../../store/ducks/login';
+import logo from '../../assets/images/logo.png';
 
 const Login = () => {
-  const {loading} = useSelector((state) => state.login);
+  const {loading, user} = useSelector((state) => state.login);
   const dispatch = useDispatch();
 
-  const submit = (values) => {
-    dispatch(LoginActions.login(values));
-  };
+  const submit = (values) => dispatch(LoginActions.login(values));
+
+  const handleSingUpPress = () => null;
+  const handleForgotPasswordPress = () => null;
+
+  useEffect(() => {
+    let mounted = true;
+    mounted && user && dispatch(LoginActions.persistLogin(user));
+    return () => {
+      mounted = false;
+    }
+  }, [user]);
 
   return (
     <S.Container behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <S.SubContainer>
-        <Formik
-          validateOnBlur={false}
-          validationSchema={yup.object().shape({
-            username: yup
-              .string()
-              .min(4, 'Digite no mínimo 4 caracteres.')
-              .required('Campo obrigatório'),
-            password: yup
-              .string()
-              .min(4, 'Digite no mínimo 4 caracteres.')
-              .required('Campo obrigatório'),
-          })}
-          initialValues={{username: '', password: ''}}
-          onSubmit={submit}
-        >
-          {({
-              handleSubmit,
-              values,
-              errors,
-              handleChange,
-              handleBlur,
-            }) => (
-            <>
-              <Input
-                onBlur={handleBlur('username')}
-                value={values.username}
-                msg={errors.username}
-                onChangeText={handleChange('username')}
-                name="USUÁRIO"
-              />
-              <Input
-                secureTextEntry
-                onBlur={handleBlur('password')}
-                value={values.password}
-                msg={errors.password}
-                onChangeText={handleChange('password')}
-                name="SENHA"
-              />
-              <Button
-                title="ENTRAR"
-                color={colors.secundary}
-                onPress={handleSubmit}
-                loading={loading}
-              />
-            </>
-          )}
-        </Formik>
-      </S.SubContainer>
+      <S.Background>
+        <S.SubContainer>
+          <S.Logo source={logo} resizeMode="contain" />
+          <Formik
+            validateOnBlur={false}
+            validationSchema={yup.object().shape({
+              email: yup
+                .string()
+                .email('Digite um email válido.')
+                .required('Campo obrigatório'),
+              password: yup
+                .string()
+                .min(3, 'Digite no mínimo 3 caracteres.')
+                .required('Campo obrigatório'),
+            })}
+            initialValues={{email: user?.email || '', password: ''}}
+            onSubmit={submit}
+          >
+            {({
+                handleSubmit,
+                values,
+                errors,
+                handleChange,
+                handleBlur,
+              }) => (
+              <>
+                <Input
+                  onBlur={handleBlur('email')}
+                  value={values.email}
+                  msg={errors.email}
+                  onChangeText={handleChange('email')}
+                  placeholder="E-MAIL"
+                  iconName="user"
+                  iconSize={40}
+                />
+                <Input
+                  secureTextEntry
+                  onBlur={handleBlur('password')}
+                  value={values.password}
+                  msg={errors.password}
+                  onChangeText={handleChange('password')}
+                  placeholder="SENHA"
+                  iconName="lock"
+                  iconSize={40}
+                />
+                <Button
+                  style={{width: '100%'}}
+                  noMargin={true}
+                  title="ENTRAR"
+                  color={colors.secondary}
+                  onPress={handleSubmit}
+                  loading={loading}
+                />
+              </>
+            )}
+          </Formik>
+          <S.LinksContainer>
+            <S.SingUpContainer>
+              <S.QuestionText>Não tem uma conta?</S.QuestionText>
+              <S.SingUpButton onPress={handleSingUpPress}>
+                <S.SingUpButtonText>
+                  Cadastre-se
+                </S.SingUpButtonText>
+              </S.SingUpButton>
+            </S.SingUpContainer>
+            <S.ForgotPasswordButton onPress={handleForgotPasswordPress}>
+              <S.ForgotPasswordButtonText>
+                Esqueceu sua senha?
+              </S.ForgotPasswordButtonText>
+            </S.ForgotPasswordButton>
+          </S.LinksContainer>
+        </S.SubContainer>
+      </S.Background>
     </S.Container>
   );
 };

@@ -1,35 +1,67 @@
-/* eslint-disable no-unused-expressions */
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
-import { TextInput, View, Text } from 'react-native';
-
-import styles from './styles';
+import * as S from './styles';
+import {Animated} from "react-native";
 
 export default function Input({
-  placeholder,
-  keyboardType,
-  secureTextEntry,
-  value,
-  onChangeText,
-  msg,
-  autoCapitalize,
-  name,
-  disabled,
-  first,
-  onBlur,
-}) {
+    placeholder,
+    keyboardType,
+    secureTextEntry,
+    value,
+    onChangeText,
+    msg,
+    autoCapitalize,
+    name,
+    disabled,
+    onBlur,
+    multiline,
+    textInputStyle,
+    loading,
+    iconName,
+    iconSize,
+  }) {
+  const [widthAnimation] = useState(new Animated.Value(20));
+
+  const startAnimation = () => {
+    Animated.timing(widthAnimation, {
+      toValue: 100,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+  };
+  const resetAnimation = async () => {
+    Animated.timing(widthAnimation, {
+      toValue: 20,
+      duration: 400,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  useEffect(() => {
+    let mounted = true;
+    mounted && (
+      loading ? startAnimation() : resetAnimation()
+    );
+    return () => {
+      mounted = false;
+    };
+  }, [loading]);
+
   return (
-    <View>
-      {name && <Text style={styles.text}>{name}</Text>}
-      <View
-        style={[
-          first === true ? styles.inputContainerFirst : styles.inputContainer,
-          !name ? { marginTop: 15 } : {},
-          disabled === true ? { backgroundColor: '#f1f1f1' } : {},
-        ]}
-      >
-        <TextInput
-          style={styles.input}
+    <S.MainContainer>
+    {msg && <S.Message>{msg}</S.Message>}
+      <S.Container>
+        <S.InputCircle style={
+          {
+            width: loading ? widthAnimation.interpolate({
+              inputRange: [20, 100],
+              outputRange: ['20%', '100%'],
+            }) : 50
+          }
+        }>
+          <S.InputIcon name={iconName} size={iconSize} />
+        </S.InputCircle>
+        <S.TextInput
           autoCapitalize={autoCapitalize || 'none'}
           autoCorrect={false}
           placeholder={placeholder}
@@ -42,9 +74,10 @@ export default function Input({
           keyboardType={keyboardType || 'default'}
           secureTextEntry={!!secureTextEntry}
           editable={!disabled}
+          multiline={multiline}
+          style={textInputStyle}
         />
-        {msg && <Text style={styles.msg}>{msg}</Text>}
-      </View>
-    </View>
+      </S.Container>
+    </S.MainContainer>
   );
 }

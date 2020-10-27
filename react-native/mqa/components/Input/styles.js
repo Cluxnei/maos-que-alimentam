@@ -1,33 +1,62 @@
-import { StyleSheet } from 'react-native';
-import { metrics, colors } from '../../styles';
+import styled from 'styled-components/native';
+import {metrics, colors} from '../../styles';
+import {EvilIcons} from "@expo/vector-icons";
+import {Animated} from "react-native";
 
-const styles = StyleSheet.create({
-  inputContainer: {
-    flexDirection: 'row',
-    borderWidth: 1,
-    borderColor: colors.secundary,
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-  },
-  input: {
-    flex: 1,
-    fontWeight: '300',
-    padding: metrics.basePadding / 1.5,
-    color: colors.white,
-  },
-  text: {
-    paddingBottom: 3,
-    marginTop: 10,
-    fontSize: 12,
-    color: colors.white,
-  },
-  msg: {
-    fontSize: 11,
-    color: colors.danger,
-    right: 0,
-    flex: 1,
-    textAlign: 'right',
-  },
-});
+export const MainContainer = styled.View`
+  justify-content: center;
+  align-items: flex-start;
+`;
 
-export default styles;
+export const Container = styled.View`
+  flex-direction: row;
+  width: ${metrics.screenWidth * 0.7}px;
+  border-color: white;
+  border-width: 1px;
+  border-radius: 50px;
+  margin: ${metrics.baseMargin}px 0;
+`;
+
+export const InputCircle = styled(Animated.View)`
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  border-radius: 25px;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const InputIcon = styled(EvilIcons)`
+  color: ${colors.primary};
+`;
+
+/*
+  flex-direction: column;
+  border-width: 1px;
+  width: ${metrics.screenWidth * 0.8}px;
+  justify-content: space-between;
+  border-color: ${colors.secondary};
+  background-color: ${colors.primary};
+  align-items: center;
+  margin-top: ${(props) => !props.name ? 15 : 0}px;
+ */
+
+export const Message = styled.Text`
+  font-size: 16px;
+  color: ${colors.textDanger};
+  font-weight: bold;
+  padding-left: ${metrics.basePadding / 2}px;
+`;
+
+export const TextInput = styled.TextInput.attrs({
+  placeholderTextColor: colors.placeHolderInput,
+  selectionColor: colors.selectionColor,
+})`
+  background-color: transparent;
+  width: 100%;
+  padding-left: 60px;
+  padding-right: 20px;
+  margin-left: -50px;
+  font-weight: 300;
+  color: ${colors.white};
+`;

@@ -6,7 +6,7 @@ import api from '../../services/api';
 import routes from "../../services/routes";
 import {dangerMessage, offlineMessage, successMessage} from "../../services/messages";
 
-function* login() {
+function* login({payload}) {
   try {
     const {online} = yield select((state) => state.network);
     if (!online) {
@@ -18,14 +18,11 @@ function* login() {
       yield put(LoginActions.loginFail());
       return dangerMessage('Ops', 'Credenciais inválidas!');
     }
-    const {user, token} = data.result;
+    const {user, token} = data;
     if (token) {
       yield call(storeToken, token.accessToken);
     }
-    yield put(LoginActions.loginSuccess({
-      data: {user},
-      success: true,
-    }));
+    yield put(LoginActions.loginSuccess({user}));
     successMessage('Sucesso', 'Logado com sucesso!');
     RootNavigation.navigate('Home');
   } catch (e) {
@@ -35,7 +32,7 @@ function* login() {
 }
 
 function* persistLogin({payload}) {
-  if (payload?.user) {
+  if (payload !== null) {
     const token = yield call(getToken);
     if (token) {
       RootNavigation.navigate('Home');

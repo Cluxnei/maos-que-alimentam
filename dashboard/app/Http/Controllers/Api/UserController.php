@@ -24,10 +24,7 @@ class UserController extends Controller
     {
         $credentials = $request->only(['email', 'password']);
         if (!Auth::attempt($credentials)) {
-            return response()->json([
-                'success' => false,
-                'result' => 'Login inválido',
-            ], Response::HTTP_OK);
+            return $this->jsonError([], Response::HTTP_UNAUTHORIZED);
         }
         $user = Auth::user();
         $token = $user->createToken('AuthToken');
@@ -40,22 +37,20 @@ class UserController extends Controller
      */
     final public function forgotPassword(Request $request): JsonResponse
     {
-        $user = User::query()->where('email', '=', $request->email)->get();
-        if ($user->count() === 0) {
-            return response()->json([
-                'success' => false,
-                'result' => 'Email inválido',
-            ], Response::HTTP_OK);
+        $user = User::query()->where('email', '=', $request->email);
+        if (!(clone $user)->exists()) {
+            return $this->jsonError([], Response::HTTP_EXPECTATION_FAILED);
         }
         $newPassword = Str::random(10);
-        $updated = $user->first()->update([
+        $user = $user->first();
+        $updated = $user->update([
             'password' => Hash::make($newPassword)
         ]);
         if (!$updated) {
-            return $this->jsonError(null, ['Erro ao atualizar senha']);
+            return $this->jsonError([], Response::HTTP_EXPECTATION_FAILED);
         }
-        event(new ForgotPassword($user->first(), $newPassword));
-        return $this->jsonSuccess(null);
+        event(new ForgotPassword($user, $newPassword));
+        return $this->jsonSuccess([]);
     }
 
     /**
@@ -68,38 +63,18 @@ class UserController extends Controller
         $data = $request->merge(compact('password'))
             ->only(['name', 'email', 'cnpj', 'phone', 'zipcode', 'street', 'city', 'password']);
         $user = User::create($data);
-        $user->setAttribute('token', $user->createToken('AuthToken'));
+        $token = $user->createToken('AuthToken');
         event(new UserRegistered($user));
-        return $this->jsonSuccess(compact('user'), Response::HTTP_CREATED);
+        return $this->jsonSuccess(compact('user', 'token'), Response::HTTP_CREATED);
     }
 
     /**
      * @param Request $request
      * @return JsonResponse
      */
-    final public function checkEmail(Request $request): JsonResponse
+    final public function checkExists(Request $request): JsonResponse
     {
-        return !User::whereEmail($request->email)->exists() ? $this->jsonSuccess(null) :
-            $this->jsonError('Esse e-mail já está em uso.', null, Response::HTTP_OK);
-    }
-
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
-    final public function checkCNPJ(Request $request): JsonResponse
-    {
-        return !User::whereCnpj($request->cnpj)->exists() ? $this->jsonSuccess(null) :
-            $this->jsonError('Esse CNPJ já está em uso.', null, Response::HTTP_OK);
-    }
-
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
-    final public function checkPhone(Request $request): JsonResponse
-    {
-        return !User::wherePhone($request->phone)->exists() ? $this->jsonSuccess(null) :
-            $this->jsonError('Esse celular já está em uso.', null, Response::HTTP_OK);
+        $exists = User::query()->where($request->attribute, '=', $request->value)->exists();
+        return $this->jsonSuccess(compact('exists'), Response::HTTP_OK);
     }
 }
