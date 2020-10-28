@@ -14,5 +14,5 @@ export default {
   success: '#4caf50',
   warning: '#ffa500',
   placeHolderInput: '#ffffff',
-  textDanger: '#ffffff'
+  textDanger: '#fae155'
 };

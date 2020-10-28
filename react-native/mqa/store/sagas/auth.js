@@ -1,7 +1,7 @@
 import {all, call, put, fork, takeLatest, select} from 'redux-saga/effects';
 import {getToken, storeToken} from '../asyncStorage';
 import * as RootNavigation from '../../services/navigation';
-import {Creators as LoginActions, Types as LoginTypes} from '../ducks/login';
+import {Creators as LoginActions, Types as LoginTypes} from '../ducks/auth';
 import api from '../../services/api';
 import routes from "../../services/routes";
 import {dangerMessage, offlineMessage, successMessage} from "../../services/messages";

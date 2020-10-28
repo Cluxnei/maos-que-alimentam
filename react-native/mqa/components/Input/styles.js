@@ -30,17 +30,6 @@ export const InputIcon = styled(EvilIcons)`
   color: ${colors.primary};
 `;
 
-/*
-  flex-direction: column;
-  border-width: 1px;
-  width: ${metrics.screenWidth * 0.8}px;
-  justify-content: space-between;
-  border-color: ${colors.secondary};
-  background-color: ${colors.primary};
-  align-items: center;
-  margin-top: ${(props) => !props.name ? 15 : 0}px;
- */
-
 export const Message = styled.Text`
   font-size: 16px;
   color: ${colors.textDanger};
@@ -59,4 +48,5 @@ export const TextInput = styled.TextInput.attrs({
   margin-left: -50px;
   font-weight: 300;
   color: ${colors.white};
+  opacity: ${(props) => props.hide ? 0 : 1};
 `;

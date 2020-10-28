@@ -7,11 +7,11 @@ import {Formik} from 'formik';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import {colors} from '../../styles';
-import {Creators as LoginActions} from '../../store/ducks/login';
+import {Creators as LoginActions} from '../../store/ducks/auth';
 import logo from '../../assets/images/logo.png';
 
 const Login = () => {
-  const {loading, user} = useSelector((state) => state.login);
+  const {loading, user} = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const submit = (values) => dispatch(LoginActions.login(values));
@@ -63,6 +63,7 @@ const Login = () => {
                   placeholder="E-MAIL"
                   iconName="user"
                   iconSize={40}
+                  loading={loading}
                 />
                 <Input
                   secureTextEntry
@@ -73,12 +74,14 @@ const Login = () => {
                   placeholder="SENHA"
                   iconName="lock"
                   iconSize={40}
+                  loading={loading}
                 />
                 <Button
-                  style={{width: '100%'}}
+                  style={{width: '80%'}}
                   noMargin={true}
                   title="ENTRAR"
-                  color={colors.secondary}
+                  fontColor={colors.primary}
+                  color={colors.white}
                   onPress={handleSubmit}
                   loading={loading}
                 />

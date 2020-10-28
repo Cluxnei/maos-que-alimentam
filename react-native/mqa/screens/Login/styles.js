@@ -17,12 +17,14 @@ export const Background = styled(LinearGradient).attrs({
 `;
 
 export const SubContainer = styled.View`
-  width: 70%;
+  width: 80%;
   align-items: center;
+  justify-content: center;
+  flex: 1;
 `;
 
 export const Logo = styled.Image`
-  width: 80%;
+  width: 100%;
   height: 150px;
   margin-bottom: ${metrics.baseMargin}px;
 `;
@@ -37,17 +39,24 @@ export const LinksContainer = styled.View`
 export const SingUpContainer = styled.View`
   flex-direction: row;
   justify-content: space-around;
-  width: 100%;
+  align-items: center;
+  width: ${metrics.screenWidth * 0.7}px;
 `;
 
 export const QuestionText = styled.Text`
   color: white;
 `;
 
-export const SingUpButton = styled.TouchableOpacity``;
+export const SingUpButton = styled.TouchableOpacity`
+  background-color: ${colors.white};
+  border-radius: 30px;
+  padding: ${metrics.basePadding / 4}px ${metrics.basePadding}px;
+  justify-content: center;
+  align-items: center;
+`;
 
 export const SingUpButtonText = styled.Text`
-  color: white;
+  color: ${colors.primary};
   font-weight: bold;
 `;
 

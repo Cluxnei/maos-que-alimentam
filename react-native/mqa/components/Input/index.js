@@ -11,7 +11,6 @@ export default function Input({
     onChangeText,
     msg,
     autoCapitalize,
-    name,
     disabled,
     onBlur,
     multiline,
@@ -62,6 +61,7 @@ export default function Input({
           <S.InputIcon name={iconName} size={iconSize} />
         </S.InputCircle>
         <S.TextInput
+          hide={loading}
           autoCapitalize={autoCapitalize || 'none'}
           autoCorrect={false}
           placeholder={placeholder}

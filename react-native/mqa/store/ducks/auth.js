@@ -12,7 +12,7 @@ const INITIAL_STATE = {
   user: null,
 };
 
-export default function login(state = INITIAL_STATE, action) {
+export default function auth(state = INITIAL_STATE, action) {
   switch (action.type) {
     case Types.LOGIN_REQUEST:
       return {...state, loading: true, success: false};
